@@ -3,14 +3,9 @@ import { collection, addDoc, getFirestore, query, where, getDocs, doc, updateDoc
 
 const db = getFirestore(firebaseApp)
 
-export const createPost = async ({ postId, destination, period, partner, content, imageUrl }) => {
+export const createPost = async (postData) => {
   return await addDoc(collection(db, 'posts'), {
-    postId,
-    imageUrl,
-    destination,
-    period,
-    partner,
-    content,
+    ...postData,
     created_at: new Date().getTime(),
   })
 }
