@@ -1,3 +1,4 @@
+
 import { app } from 'firebase.js'
 import React from 'react'
 import CardList from 'components/CardList'
@@ -21,6 +22,7 @@ function HomePage() {
       <CardList />
     </div>
   )
+
 }
 
 export default HomePage
