@@ -1,4 +1,4 @@
-import firebaseApp from './firebase'
+import firebaseApp from '../firebase'
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
 const storage = getStorage(firebaseApp)
