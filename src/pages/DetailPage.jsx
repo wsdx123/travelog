@@ -22,14 +22,7 @@ function DetailPage() {
     }
   },[postId,navigate])
 
-  const handleDeletePost = async () => {
-    try{
-      const response = await deletePost(post.id)
-      console.log(response)
-    } catch(error) {
-      console.error(error)
-    }
-  }
+
 
   useEffect(() => {
     loadPost()
@@ -40,7 +33,6 @@ function DetailPage() {
     <img width={400} height={400} src={post.imageUrl}/>
     {post.content} 
     <Link to={`/postPage?action=edit&postId=${postId}`}>수정</Link>
-    <button onClick={handleDeletePost}>삭제</button>
     </div>)
 }
 
