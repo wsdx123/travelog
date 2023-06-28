@@ -15,9 +15,11 @@ function App() {
           <Route path='/' element={<HomePage />} />
           <Route path='myPage' element={<MyPage />} />
           <Route path='postPage' element={<PostPage />} />
-          <Route path='signUpPage' element={<SignUpPage />} />
-          <Route path='signInPage' element={<SignInPage />} />
-          <Route path='detailPage' element={<DetailPage />} />
+
+          <Route path='SignUpPage' element={<SignUpPage />} />
+          <Route path='SignInPage' element={<SignInPage />} />
+          <Route path='/post/:postId' element={<DetailPage />} />
+
         </Routes>
       </Layout>
     </BrowserRouter>
