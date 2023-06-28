@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Container, FormContainer, Title } from './SignUpPage'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from 'firebase.js'
+import { useDispatch } from 'react-redux'
+import { signInData } from 'redux/modules/signIn'
 
 function SignInPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleOnChange = (e) => {
     if (e.target.name === 'signInEmail') {
@@ -23,6 +26,8 @@ function SignInPage() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       console.log(userCredential)
+      const { uid, stsTokenManager } = userCredential.user
+      dispatch(signInData({ email, uid, authToken: stsTokenManager }))
       navigate('/')
     } catch (error) {
       const errorCode = error.code
@@ -31,10 +36,6 @@ function SignInPage() {
       }
     }
   }
-
-  useEffect(() => {
-    console.log(auth)
-  }, [])
 
   return (
     <Container>

@@ -1,14 +1,23 @@
-
-import { app } from 'firebase.js'
-import React from 'react'
+import { app, auth } from 'firebase.js'
+import React, { useEffect } from 'react'
 import CardList from 'components/CardList'
 import Form from 'components/Form'
+import { onAuthStateChanged } from '@firebase/auth'
+import { useSelector } from 'react-redux'
 
 // 추가기능 LIST
 // 1. 무한스크롤
 // 2. 지도API
 
 function HomePage() {
+  const loginData = useSelector((state) => state.signIn)
+
+  console.log(loginData)
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log(user)
+    })
+  }, [])
   return (
     <div>
       <h3>HomePage</h3>
@@ -22,7 +31,6 @@ function HomePage() {
       <CardList />
     </div>
   )
-
 }
 
 export default HomePage
