@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 const HeaderStyles = {
@@ -23,6 +24,7 @@ const layoutStyles = {
 
 function Header() {
   const navigate = useNavigate()
+  const tmp = useSelector((state) => state.signIn)
 
   return (
     <div style={{ ...HeaderStyles }}>
@@ -31,6 +33,7 @@ function Header() {
         <Link to='/SignUpPage'>회원가입</Link>
         <Link to='/SignInPage'>로그인</Link>
         <Link to='/PostPage?action=write'>게시글작성</Link>
+        <Link to={`/myPage/${tmp.uid}`}>My Page</Link>
       </nav>
     </div>
   )
