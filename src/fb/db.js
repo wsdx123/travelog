@@ -29,3 +29,12 @@ export const getPostByPostId = async (postId) => {
   })
   return post[0]
 }
+
+export const getPostsAll = async () => {
+  const querySnapshot = await getDocs(collection(db, 'posts'))
+  const posts = []
+  querySnapshot.forEach((doc) => {
+    posts.push({ id: doc.id, ...doc.data() })
+  })
+  return posts
+}
