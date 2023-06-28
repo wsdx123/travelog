@@ -4,23 +4,24 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `
 
-const Title = styled.h1`
+export const Title = styled.h1`
   margin: 30px 0;
   font-size: x-large;
   font-weight: 700;
 `
 
-const FormContainer = styled.form`
+export const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-bottom: 20px;
 `
 
 const EMAIL_REG = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
