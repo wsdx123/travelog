@@ -1,4 +1,4 @@
-import { app } from 'firebase.js'
+import app from 'firebase.js'
 import React from 'react'
 
 function HomePage() {
