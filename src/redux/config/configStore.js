@@ -1,11 +1,11 @@
 import { createStore } from 'redux'
 import { combineReducers } from 'redux'
-import comments from 'redux/modules/detail'
-import posts from 'modules/post'
+import details from 'redux/modules/details'
+import posts from 'redux/modules/post'
 
 const rootReducer = combineReducers({
-  posts: posts, comments,
-
+  posts,
+  details,
 })
 const store = createStore(rootReducer)
 

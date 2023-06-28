@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const HeaderStyles = {
   width: '100%',
@@ -28,9 +28,9 @@ function Header() {
     <div style={{ ...HeaderStyles }}>
       <span onClick={() => navigate('/')}>TRAVELOG</span>
       <nav style={{ paddingLeft: '20px' }}>
-        <a onClick={() => navigate('/SignUpPage')}>회원가입</a>
-        <a onClick={() => navigate('/SignInPage')}>로그인</a>
-        <a onClick={() => navigate('/PostPage')}>게시글작성</a>
+        <Link to='/SignUpPage'>회원가입</Link>
+        <Link to='/SignInPage'>로그인</Link>
+        <Link to='/PostPage?action=write'>게시글작성</Link>
       </nav>
     </div>
   )

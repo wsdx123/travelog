@@ -18,7 +18,7 @@ const initialState = [
   },
 ]
 
-const comments = (state = initialState, action) => {
+const details = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_COMMENTS':
       console.log(action.payload)
@@ -57,4 +57,4 @@ const comments = (state = initialState, action) => {
   }
 }
 
-export default comments
+export default details

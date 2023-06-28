@@ -18,8 +18,7 @@ function App() {
 
           <Route path='SignUpPage' element={<SignUpPage />} />
           <Route path='SignInPage' element={<SignInPage />} />
-          <Route path='/post/:postId' element={<DetailPage />} />
-
+          <Route path='/postPage/:postId' element={<DetailPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>
