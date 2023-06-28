@@ -65,12 +65,15 @@ const ImagePreviewContainer = styled.div`
 `
 
 const ImagePreview = styled.img`
+  background-color: #fff;
+  border: 2px solid #0099FF;
+  border-radius: 20px;
   display: inline-block;
   object-fit: contain;
   -webkit-user-drag: none;
   -moz-user-drag: none;
   -ms-user-drag: none;
-  user-drag: none;
+
 `
 
 
