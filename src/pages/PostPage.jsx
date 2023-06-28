@@ -1,6 +1,6 @@
 import { useQuery } from 'hooks';
 import { createPost, deletePost, getPostByPostId, updatePost } from '../fb/db';
-import { deleteImage, uploadImage, uploadImages } from '../fb/storage';
+import { deleteImage, uploadImages } from '../fb/storage';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { redirect, useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
@@ -48,13 +48,29 @@ const UploadZone = styled.div`
   border: 2px dashed #0099FF;
   border-radius: 20px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const ImagePreviewContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3,1fr);
+  align-items: center;
+  justify-items: center;
 `
 
 const ImagePreview = styled.img`
-  width: 100%;
-  height: 100%;
   display: inline-block;
   object-fit: contain;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  user-drag: none;
 `
 
 
@@ -67,10 +83,26 @@ function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
     event.preventDefault()
   }
 
+  const sliceFilesMax = (files) => {
+    console.log(files)
+    if(files.length > 9) {
+      const filesResult = new DataTransfer();
+      Array.from(files).slice(0,9).forEach((file=> filesResult.items.add(file)))
+      console.log(filesResult)
+      return filesResult.files
+    } 
+    return files
+  }
+
   const handleDrop = (event) => {
     event.preventDefault()
-    const fileslength = event.dataTransfer.files.length;
-    setImage(event.dataTransfer.files.slice(0,Math.min(10,fileslength)))
+    const files = sliceFilesMax(event.dataTransfer.files)
+    setImage(files)
+  }
+
+  const handleUploadInput = (event) => {
+    const files = sliceFilesMax(event.target.files)
+    setImage(files)
   }
 
   const setImage = (files) => {
@@ -102,38 +134,38 @@ function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
     if (imageFiles) console.log(imageFiles)
   })
 
+
   const imageFileList = []
 
   if(imageFiles) {
     for(let i = 0; i < imageFiles.length; i++) {
-      imageFileList.push(<div key={i}><div><img width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))}/></div>{imageFiles.item(i).name} {convertBytesToString(imageFiles.item(i).size)} </div>)
+      imageFileList.push(<ImagePreview key={i} width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))}/>)
     }
-  } else if (initialImageUrl) {
-    for(let i = 0; i < initialImageUrl.length; i++) {
-      imageFileList.push(<div key={i}><div><img width={100} height={100} alt='image' src={initialImageUrl[i]}/></div></div>)
+  } else if (imageUrl) {
+    for(let i = 0; i < imageUrl.length; i++) {
+      imageFileList.push(<ImagePreview width={100} height={100} alt='image' src={imageUrl[i]}/>)
     }
   }
-  console.log(imageFileList)
+
   return (
     <>
       <UploadZone onDragOver={handleDragOver} onDrop={handleDrop}>
         <input
           type='file'
           accept='image/*'
-          onChange={(event) => setImage(event.target.files)}
+          onChange={handleUploadInput}
           multiple
           hidden
           ref={inputRef}
         />
-
-        {imageUrl ? <ImagePreview width={400} height={400} src={imageUrl} alt={'post image'} /> : 'drag and drop'}
+        {imageFileList.length > 0 || imageUrl ? <ImagePreviewContainer>{imageFileList}</ImagePreviewContainer> : <button style={{position:'absolute'}} type='button' onClick={() => inputRef.current.click()}>이미지 선택</button>}
       </UploadZone>
       <div>
-        <button type='button' onClick={() => inputRef.current.click()}>이미지 선택</button>
+        
         <button type='button' onClick={handleUseExistImage}>원래대로</button>
         <button type='button' onClick={handleResetImage}>삭제</button>
       </div>
-      {imageFileList.length > 0 || initialImageUrl ? imageFileList : null}
+      
     </>)
 }
 
@@ -188,7 +220,7 @@ function PostForm({ isEdit, postData }) {
     try {
       //  if(isResetImage && postData.imageUrl) deletePostImage(postData.postId)
       if (isResetImage || imageFiles) await deleteImage(postData.postId)
-      const imageUrl = isResetImage ? '' : imageFiles ? await uploadImage(postData.postId, imageFiles) : postData.imageUrl
+      const imageUrl = isResetImage ? '' : imageFiles ? await uploadImages(postData.postId, imageFiles) : postData.imageUrl
 
       const updatedPost = {};
       if (destination !== postData.destination) updatedPost['destination'] = destination
@@ -232,10 +264,6 @@ function PostForm({ isEdit, postData }) {
       console.error(error)
     }
   }
-
-  useEffect(() => {
-    console.log(`resetImage: ${isResetImage} image: ${imageFiles} / destination: ${destination} / period: ${period} / partner: ${partner} / content: ${content}`)
-  }, [isResetImage, imageFiles, destination, period, partner, content])
 
   return (
     <>

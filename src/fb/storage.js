@@ -12,20 +12,17 @@ export const uploadImage = async (postId, file) => {
 }
 
 export const uploadImages = async (postId, files) => {
-  const donwloadUrls = []
+  const downloadUrls = []
   for (let i = 0; i < files.length; i++) {
     const imageRef = ref(storage, `images/posts/${postId}/${uuidv4()}`)
     await uploadBytes(imageRef, files.item(i))
     const downloadURL = await getDownloadURL(imageRef)
-    donwloadUrls.push(downloadURL)
+    downloadUrls.push(downloadURL)
   }
-
-  return donwloadUrls
+  return downloadUrls
 }
 
-export const deleteImage = async (postId) => {
-  return await deleteFolder(`images/posts/${postId}`)
-}
+export const deleteImage = async (postId) => await deleteFolder(`images/posts/${postId}`)
 
 const deleteFile = async (path) => {
   const deleteItemRef = ref(storage, path)
