@@ -1,5 +1,8 @@
+import { signOut } from '@firebase/auth'
+import { auth } from 'firebase.js'
+
 import React from 'react'
-import { useSelector } from 'react-redux'
+
 import { Link, useNavigate } from 'react-router-dom'
 
 const HeaderStyles = {
@@ -22,18 +25,41 @@ const layoutStyles = {
   minHeight: '90vh',
 }
 
+// 왜 새로고침하고 로그인 페이지로 오면 auth.currentUser 값이 남아있는지?
+
 function Header() {
   const navigate = useNavigate()
-  const tmp = useSelector((state) => state.signIn)
 
+  const handleMyPage = () => {
+    navigate(`/myPage/${auth.currentUser.uid}`)
+  }
+  const handleLogOut = async () => {
+    alert('로그아웃되었습니다.')
+    await signOut(auth)
+    navigate('/')
+  }
+  console.log(auth.currentUser)
   return (
     <div style={{ ...HeaderStyles }}>
       <span onClick={() => navigate('/')}>TRAVELOG</span>
       <nav style={{ paddingLeft: '20px' }}>
-        <Link to='/SignUpPage'>회원가입</Link>
-        <Link to='/SignInPage'>로그인</Link>
-        <Link to='/PostPage?action=write'>게시글작성</Link>
-        <Link to={`/myPage/${tmp.uid}`}>My Page</Link>
+        {auth.currentUser === null ? (
+          <div>
+            <Link to='/SignUpPage'>회원가입</Link>
+            <Link to='/SignInPage'>로그인</Link>
+          </div>
+        ) : (
+          <div>
+            <Link to='/PostPage?action=write'>게시글작성</Link>
+
+            <button type='button' onClick={handleMyPage}>
+              My Page
+            </button>
+            <button type='button' onClick={handleLogOut}>
+              로그아웃
+            </button>
+          </div>
+        )}
       </nav>
     </div>
   )
