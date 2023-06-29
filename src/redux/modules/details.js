@@ -21,7 +21,6 @@ const initialState = [
 const details = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_COMMENTS':
-      console.log(action.payload)
       if (action.payload) {
         return [
           ...state,

@@ -1,18 +1,18 @@
-
 import React from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { useRef } from 'react'
 import { deletePost, getPostByPostId } from 'fb/db'
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 function DetailPage() {
+  console.log('hi!!!!!!!!')
   //
-  const [post,setPost] = useState(null);
-  const { postId } =useParams()
-  const navigate = useNavigate();
-  
+  const [post, setPost] = useState(null)
+  const { postId } = useParams()
+  const navigate = useNavigate()
+
   const dispatch = useDispatch()
   const comments = useSelector((state) => {
     return state.comments
@@ -22,29 +22,28 @@ function DetailPage() {
 
   const addInputRef = useRef()
   const editInputRef = useRef()
-  
+
   const loadPost = useCallback(async () => {
-    try{
+    try {
       const postData = await getPostByPostId(postId)
       console.log(postData)
-      if(!postData) {
+      if (!postData) {
         console.log('redirect')
         navigate('/')
       }
       setPost(postData)
-    } catch(error) {
+    } catch (error) {
       console.error(error)
       navigate('/')
     }
-  },[postId,navigate])
-
-
+  }, [postId, navigate])
 
   useEffect(() => {
     loadPost()
-  },[loadPost])
-  
-  if(!post) return <div>Loadng...</div>
+  }, [loadPost])
+
+  if (!post) return <div>Loadng...</div>
+
   return (
     <>
       <form

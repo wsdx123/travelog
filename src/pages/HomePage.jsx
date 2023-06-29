@@ -1,4 +1,3 @@
-
 import { app } from 'firebase.js'
 import React from 'react'
 import CardList from 'components/CardList'
@@ -20,9 +19,9 @@ function HomePage() {
       {/* 게시글 리스트 */}
       <Form />
       <CardList />
+      <button>f</button>
     </div>
   )
-
 }
 
 export default HomePage
