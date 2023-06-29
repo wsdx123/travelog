@@ -1,20 +1,31 @@
+
 import { auth } from 'firebase.js'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import CardList from 'components/CardList'
+
 import Form from 'components/Form'
+
 import { onAuthStateChanged } from '@firebase/auth'
+
+import { getPostsAll } from 'fb/db'
+
 
 // 추가기능 LIST
 // 1. 무한스크롤
 // 2. 지도API
 
 function HomePage() {
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     console.log(user)
-  //   })
-  // }, [])
+
   console.log(auth.currentUser)
+
+  const [posts,setPosts] = useState(null)
+  useEffect(()=>{
+    getPostsAll().then((postsArray)=>setPosts(postsArray))
+  },[])
+
+  useEffect(()=>{
+    console.dir(posts)
+  },[posts])
   return (
     <div>
       <h3>HomePage</h3>
@@ -24,8 +35,9 @@ function HomePage() {
         <button>아이콘</button>
       </form>
       {/* 게시글 리스트 */}
-      <Form />
+      <br />
       <CardList />
+      <button>f</button>
     </div>
   )
 }

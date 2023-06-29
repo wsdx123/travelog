@@ -41,7 +41,9 @@ function Header() {
   console.log(auth.currentUser)
   return (
     <div style={{ ...HeaderStyles }}>
-      <span onClick={() => navigate('/')}>TRAVELOG</span>
+      <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        TRAVELOG
+      </span>
       <nav style={{ paddingLeft: '20px' }}>
         {auth.currentUser === null ? (
           <div>
