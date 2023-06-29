@@ -1,7 +1,7 @@
 import firebaseApp from '../firebase'
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
-const storage = getStorage(firebaseApp)
+export const storage = getStorage(firebaseApp)
 
 export const uploadImage = async (postId, file) => {
   // ref 함수를 이용해서 Storage 내부 저장할 위치를 지정하고, uploadBytes 함수를 이용해서 파일을 저장합니다.

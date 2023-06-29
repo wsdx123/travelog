@@ -1,5 +1,6 @@
-import { auth } from 'firebase.js'
+import { auth, db } from 'firebase.js'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth'
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
@@ -61,7 +62,10 @@ function SignUpPage() {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      console.log(userCredential.user)
+      const newInfo = { name: '', email: email, places: '', intro: '', id: userCredential.user.uid, profile: '' }
+      // const collectionRef = collection(db, 'users')
+      await setDoc(doc(db, 'users', userCredential.user.uid), newInfo)
+
       signOut(auth)
       alert('회원가입이 완료되었습니다. 로그인 화면에서 로그인을 해주세요')
       navigate('/signInPage')
@@ -73,11 +77,11 @@ function SignUpPage() {
     }
   }
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      console.log(user)
-    })
-  }, [])
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (user) => {
+  //     console.log(user)
+  //   })
+  // }, [])
 
   return (
     <Container>
