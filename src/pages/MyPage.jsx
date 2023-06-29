@@ -33,16 +33,28 @@ function MyPage() {
     setImgFile(file)
     setPreview(image)
   }
+  const handlePreview = () => {
+    setPreview(null)
+    setImgFile(null)
+  }
+
   const handleUpload = async () => {
-    const imageRef = ref(storage, `${auth.currentUser.uid}/${imgFile.name}`)
-    await uploadBytes(imageRef, imgFile)
-
-    const downloadURL = await getDownloadURL(imageRef)
-
     const infoRef = doc(db, 'users', userInfo.id)
-    const newInfo = { ...userInfo, name: userName, intro: userIntro, places: userPlaces, profile: downloadURL }
-    await updateDoc(infoRef, newInfo)
-    setUserInfo(newInfo)
+    if (imgFile === null) {
+      const newInfo = { ...userInfo, name: userName, intro: userIntro, places: userPlaces, profile: '' }
+      await updateDoc(infoRef, newInfo)
+      setUserInfo(newInfo)
+    } else {
+      const imageRef = ref(storage, `${auth.currentUser.uid}/${imgFile.name}`)
+      await uploadBytes(imageRef, imgFile)
+
+      const downloadURL = await getDownloadURL(imageRef)
+
+      const newInfo = { ...userInfo, name: userName, intro: userIntro, places: userPlaces, profile: downloadURL }
+
+      await updateDoc(infoRef, newInfo)
+      setUserInfo(newInfo)
+    }
     setUserUpdate(false)
   }
 
@@ -73,7 +85,7 @@ function MyPage() {
               <input type='file' onChange={handleImgSelect} />
             )}
           </ProfilePicContainer>
-          <button type='button' onClick={() => setPreview(null)}>
+          <button type='button' onClick={handlePreview}>
             이미지 삭제
           </button>
           <ProfileInfoContainer>
