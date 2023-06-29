@@ -26,7 +26,9 @@ function Header() {
 
   return (
     <div style={{ ...HeaderStyles }}>
-      <span onClick={() => navigate('/')}>TRAVELOG</span>
+      <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        TRAVELOG
+      </span>
       <nav style={{ paddingLeft: '20px' }}>
         <Link to='/SignUpPage'>회원가입</Link>
         <Link to='/SignInPage'>로그인</Link>
