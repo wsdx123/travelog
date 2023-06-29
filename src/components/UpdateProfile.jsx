@@ -1,4 +1,4 @@
-import * as P from 'components/profile.styled.js'
+import * as S from 'components/Profile.styled.js'
 
 function UpdateProfile({
   handleInput,
@@ -12,18 +12,18 @@ function UpdateProfile({
   handleUpload,
 }) {
   return (
-    <P.ProfileContainer>
-      <P.ProfilePicContainer>
+    <S.ProfileContainer>
+      <S.ProfilePicContainer>
         {preview ? (
           <img src={preview} width={300} height={300} alt='profileImg' />
         ) : (
           <input type='file' onChange={handleImgSelect} />
         )}
-      </P.ProfilePicContainer>
+      </S.ProfilePicContainer>
       <button type='button' onClick={handlePreview}>
         이미지 삭제
       </button>
-      <P.ProfileInfoContainer>
+      <S.ProfileInfoContainer>
         <div>
           <label>이름</label>
           <input placeholder='user.id' name='name' onChange={handleInput} value={userName} />
@@ -36,16 +36,16 @@ function UpdateProfile({
           <label>가본 여행지</label>
           <input placeholder='가본 여행지' name='places' onChange={handleInput} value={userPlaces} />
         </div>
-      </P.ProfileInfoContainer>
-      <P.ProfileBtnContainer>
+      </S.ProfileInfoContainer>
+      <S.ProfileBtnContainer>
         <button type='button' onClick={() => setUserUpdate(false)}>
           취소
         </button>
         <button type='button' onClick={handleUpload}>
           저장
         </button>
-      </P.ProfileBtnContainer>
-    </P.ProfileContainer>
+      </S.ProfileBtnContainer>
+    </S.ProfileContainer>
   )
 }
 

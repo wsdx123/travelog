@@ -1,6 +1,6 @@
 import { styled } from 'styled-components'
 
-const MyPageContainer = styled.div`
+export const MyPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,7 +12,7 @@ const MyPageContainer = styled.div`
     margin: 20px;
   }
 `
-const ProfileContainer = styled.div`
+export const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,7 +20,7 @@ const ProfileContainer = styled.div`
   border: 1px solid black;
 `
 
-const ProfilePicContainer = styled.div`
+export const ProfilePicContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,7 +37,7 @@ const ProfilePicContainer = styled.div`
   }
 `
 
-const ProfileInfoContainer = styled.div`
+export const ProfileInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,7 +60,7 @@ const ProfileInfoContainer = styled.div`
   }
 `
 
-const ProfileBtnContainer = styled.div`
+export const ProfileBtnContainer = styled.div`
   display: flex;
   width: calc(100% - 20px);
   margin: 10px;
@@ -70,7 +70,7 @@ const ProfileBtnContainer = styled.div`
   }
 `
 
-const PostContainer = styled.div`
+export const PostContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -78,14 +78,14 @@ const PostContainer = styled.div`
   width: 100%;
 `
 
-const PostBtnContainer = styled.div`
+export const PostBtnContainer = styled.div`
   display: flex;
   margin: 10px;
   justify-content: space-evenly;
   width: 100%;
 `
 
-const CardContainer = styled.div`
+export const CardContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 

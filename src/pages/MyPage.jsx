@@ -5,7 +5,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useEffect, useState } from 'react'
 import empty from 'pages/user.png'
 
-import * as P from 'components/profile.styled.js'
+import * as S from 'components/Profile.styled.js'
 import UpdateProfile from 'components/UpdateProfile'
 import Profile from 'components/Profile'
 
@@ -77,9 +77,9 @@ function MyPage() {
   }, [])
 
   return (
-    <P.MyPageContainer>
+    <S.MyPageContainer>
       <h1>My Page</h1>
-      {/* {userUpdate ? (
+      {userUpdate ? (
         <UpdateProfile
           handleInput={handleInput}
           handleImgSelect={handleImgSelect}
@@ -93,73 +93,23 @@ function MyPage() {
         />
       ) : (
         <Profile userInfo={userInfo} setUserUpdate={setUserUpdate} />
-      )} */}
-      {userUpdate ? (
-        <P.ProfileContainer>
-          <P.ProfilePicContainer>
-            {preview ? (
-              <img src={preview} width={300} height={300} alt='profileImg' />
-            ) : (
-              <input type='file' onChange={handleImgSelect} />
-            )}
-          </P.ProfilePicContainer>
-          <button type='button' onClick={handlePreview}>
-            이미지 삭제
-          </button>
-          <P.ProfileInfoContainer>
-            <div>
-              <label>이름</label>
-              <input placeholder='user.id' name='name' onChange={handleInput} value={userName} />
-            </div>
-            <div>
-              <label>자기소개</label>
-              <input placeholder='자기소개' name='intro' onChange={handleInput} value={userIntro} />
-            </div>
-            <div>
-              <label>가본 여행지</label>
-              <input placeholder='가본 여행지' name='places' onChange={handleInput} value={userPlaces} />
-            </div>
-          </P.ProfileInfoContainer>
-          <P.ProfileBtnContainer>
-            <button type='button' onClick={() => setUserUpdate(false)}>
-              취소
-            </button>
-            <button type='button' onClick={handleUpload}>
-              저장
-            </button>
-          </P.ProfileBtnContainer>
-        </P.ProfileContainer>
-      ) : (
-        <P.ProfileContainer>
-          <P.ProfilePicContainer>
-            <img src={userInfo.profile === '' ? empty : userInfo.profile} width={300} height={300} alt='profileImg' />
-          </P.ProfilePicContainer>
-          <P.ProfileInfoContainer>
-            <span>이름 : {userInfo.name}</span>
-            <span>자기소개 : {userInfo.intro}</span>
-            <span>가본 여행지 : {userInfo.places}</span>
-          </P.ProfileInfoContainer>
-          <P.ProfileBtnContainer>
-            <button onClick={() => setUserUpdate(true)}>수정</button>
-          </P.ProfileBtnContainer>
-        </P.ProfileContainer>
       )}
 
-      <P.PostContainer>
-        <P.PostBtnContainer>
+      <S.PostContainer>
+        <S.PostBtnContainer>
           <button type='button'>내가 작성한 게시물</button>
           <button type='button'>내가 좋아한 게시물</button>
-        </P.PostBtnContainer>
-        <P.CardContainer>
+        </S.PostBtnContainer>
+        <S.CardContainer>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
-        </P.CardContainer>
-      </P.PostContainer>
-    </P.MyPageContainer>
+        </S.CardContainer>
+      </S.PostContainer>
+    </S.MyPageContainer>
   )
 }
 
