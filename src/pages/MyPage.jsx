@@ -3,8 +3,11 @@ import { auth, db } from 'firebase.js'
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useEffect, useState } from 'react'
-import { styled } from 'styled-components'
 import empty from 'pages/user.png'
+
+import * as P from 'components/profile.styled.js'
+import UpdateProfile from 'components/UpdateProfile'
+import Profile from 'components/Profile'
 
 function MyPage() {
   const [userName, setUserName] = useState('')
@@ -74,21 +77,36 @@ function MyPage() {
   }, [])
 
   return (
-    <MyPageContainer>
+    <P.MyPageContainer>
       <h1>My Page</h1>
+      {/* {userUpdate ? (
+        <UpdateProfile
+          handleInput={handleInput}
+          handleImgSelect={handleImgSelect}
+          handlePreview={handlePreview}
+          userName={userName}
+          userIntro={userIntro}
+          userPlaces={userPlaces}
+          preview={preview}
+          setUserUpdate={setUserUpdate}
+          handleUpload={handleUpload}
+        />
+      ) : (
+        <Profile userInfo={userInfo} setUserUpdate={setUserUpdate} />
+      )} */}
       {userUpdate ? (
-        <ProfileContainer>
-          <ProfilePicContainer>
+        <P.ProfileContainer>
+          <P.ProfilePicContainer>
             {preview ? (
               <img src={preview} width={300} height={300} alt='profileImg' />
             ) : (
               <input type='file' onChange={handleImgSelect} />
             )}
-          </ProfilePicContainer>
+          </P.ProfilePicContainer>
           <button type='button' onClick={handlePreview}>
             이미지 삭제
           </button>
-          <ProfileInfoContainer>
+          <P.ProfileInfoContainer>
             <div>
               <label>이름</label>
               <input placeholder='user.id' name='name' onChange={handleInput} value={userName} />
@@ -101,146 +119,48 @@ function MyPage() {
               <label>가본 여행지</label>
               <input placeholder='가본 여행지' name='places' onChange={handleInput} value={userPlaces} />
             </div>
-          </ProfileInfoContainer>
-          <ProfileBtnContainer>
+          </P.ProfileInfoContainer>
+          <P.ProfileBtnContainer>
             <button type='button' onClick={() => setUserUpdate(false)}>
               취소
             </button>
             <button type='button' onClick={handleUpload}>
               저장
             </button>
-          </ProfileBtnContainer>
-        </ProfileContainer>
+          </P.ProfileBtnContainer>
+        </P.ProfileContainer>
       ) : (
-        <ProfileContainer>
-          <ProfilePicContainer>
+        <P.ProfileContainer>
+          <P.ProfilePicContainer>
             <img src={userInfo.profile === '' ? empty : userInfo.profile} width={300} height={300} alt='profileImg' />
-          </ProfilePicContainer>
-          <ProfileInfoContainer>
+          </P.ProfilePicContainer>
+          <P.ProfileInfoContainer>
             <span>이름 : {userInfo.name}</span>
             <span>자기소개 : {userInfo.intro}</span>
             <span>가본 여행지 : {userInfo.places}</span>
-          </ProfileInfoContainer>
-          <ProfileBtnContainer>
+          </P.ProfileInfoContainer>
+          <P.ProfileBtnContainer>
             <button onClick={() => setUserUpdate(true)}>수정</button>
-          </ProfileBtnContainer>
-        </ProfileContainer>
+          </P.ProfileBtnContainer>
+        </P.ProfileContainer>
       )}
-      {/*  */}
 
-      <PostContainer>
-        <PostBtnContainer>
+      <P.PostContainer>
+        <P.PostBtnContainer>
           <button type='button'>내가 작성한 게시물</button>
           <button type='button'>내가 좋아한 게시물</button>
-        </PostBtnContainer>
-        <CardContainer>
+        </P.PostBtnContainer>
+        <P.CardContainer>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
           <div>카드</div>
-        </CardContainer>
-      </PostContainer>
-    </MyPageContainer>
+        </P.CardContainer>
+      </P.PostContainer>
+    </P.MyPageContainer>
   )
 }
 
 export default MyPage
-
-const MyPageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px;
-
-  h1 {
-    font-size: xx-large;
-    font-weight: 800;
-    margin: 20px;
-  }
-`
-const ProfileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-`
-
-const ProfilePicContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 50%;
-  width: 300px;
-  height: 300px;
-  margin: 10px;
-  overflow: hidden;
-
-  img {
-    object-fit: cover;
-  }
-`
-
-const ProfileInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: 1px solid red;
-  width: calc(100% - 20px);
-  padding: 10px;
-  div {
-    label {
-      min-width: 100px;
-    }
-    input {
-      width: 100%;
-    }
-    display: flex;
-    margin-bottom: 10px;
-    align-items: center;
-  }
-  span {
-    margin-bottom: 10px;
-  }
-`
-
-const ProfileBtnContainer = styled.div`
-  display: flex;
-  width: calc(100% - 20px);
-  margin: 10px;
-  justify-content: end;
-  button {
-    margin-left: 10px;
-  }
-`
-
-const PostContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid black;
-  width: 100%;
-`
-
-const PostBtnContainer = styled.div`
-  display: flex;
-  margin: 10px;
-  justify-content: space-evenly;
-  width: 100%;
-`
-
-const CardContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-
-  div {
-    width: 80px;
-    height: 80px;
-    margin: 10px;
-    border: 1px solid green;
-  }
-`
