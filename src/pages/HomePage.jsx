@@ -1,12 +1,24 @@
 import { app } from 'firebase.js'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CardList from 'components/CardList'
+
+import Form from 'components/Form'
+import { getPostsAll } from 'fb/db'
+
 
 // 추가기능 LIST
 // 1. 무한스크롤
 // 2. 지도API
 
 function HomePage() {
+  const [posts,setPosts] = useState(null)
+  useEffect(()=>{
+    getPostsAll().then((postsArray)=>setPosts(postsArray))
+  },[])
+
+  useEffect(()=>{
+    console.dir(posts)
+  },[posts])
   return (
     <div>
       <h3>HomePage</h3>
