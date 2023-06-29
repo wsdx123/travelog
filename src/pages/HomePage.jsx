@@ -1,7 +1,6 @@
 import { app } from 'firebase.js'
 import React from 'react'
 import CardList from 'components/CardList'
-import Form from 'components/Form'
 
 // 추가기능 LIST
 // 1. 무한스크롤
@@ -17,7 +16,7 @@ function HomePage() {
         <button>아이콘</button>
       </form>
       {/* 게시글 리스트 */}
-      <Form />
+      <br />
       <CardList />
       <button>f</button>
     </div>
