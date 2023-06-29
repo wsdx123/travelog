@@ -13,7 +13,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path='/' element={<HomePage />} />
-          <Route path='myPage' element={<MyPage />} />
+          <Route path='/myPage/:myId' element={<MyPage />} />
           <Route path='postPage' element={<PostPage />} />
 
           <Route path='SignUpPage' element={<SignUpPage />} />

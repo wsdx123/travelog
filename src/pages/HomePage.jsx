@@ -1,8 +1,12 @@
-import { app } from 'firebase.js'
+
+import { auth } from 'firebase.js'
 import React, { useEffect, useState } from 'react'
 import CardList from 'components/CardList'
 
 import Form from 'components/Form'
+
+import { onAuthStateChanged } from '@firebase/auth'
+
 import { getPostsAll } from 'fb/db'
 
 
@@ -11,6 +15,9 @@ import { getPostsAll } from 'fb/db'
 // 2. 지도API
 
 function HomePage() {
+
+  console.log(auth.currentUser)
+
   const [posts,setPosts] = useState(null)
   useEffect(()=>{
     getPostsAll().then((postsArray)=>setPosts(postsArray))
