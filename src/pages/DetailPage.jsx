@@ -7,6 +7,7 @@ import { deletePost, getPostByPostId } from 'fb/db'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 function DetailPage() {
+
   const [post, setPost] = useState(null)
   const { postId } = useParams()
 
@@ -42,6 +43,7 @@ function DetailPage() {
   }, [loadPost])
 
   if (!post) return <div>Loadng...</div>
+
   return (
     <>
       <p>Detail Page</p>
