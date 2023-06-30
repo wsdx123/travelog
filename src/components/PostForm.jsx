@@ -28,9 +28,9 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
   const [isResetImage, setResetImage] = useState(false)
   const [isOpenLocationModal, setOpenLocationModal] = useState(false)
   const [locationData,setLocationData] = useState({
-    name : initialPostData?.locationData.name, 
-    longitude :initialPostData?.locationData.longitude, 
-    latitude :initialPostData?.locationData.latitude  
+    name : initialPostData?.locationData.name || '', 
+    longitude :initialPostData?.locationData.longitude || 0, 
+    latitude :initialPostData?.locationData.latitude || 0
   })
   const navigate = useNavigate()
 
@@ -86,6 +86,7 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    console.log(locationData)
     if(validateForm) onSubmit({
       ...postData,
       imageFiles,

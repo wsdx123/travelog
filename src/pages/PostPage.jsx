@@ -5,7 +5,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { redirect, useNavigate } from 'react-router-dom'
 import PostForm from 'components/PostForm';
 import { v4 } from 'uuid'
-import { deleteImage, uploadImage, uploadImages } from 'fb/storage';
+import { deleteImage, uploadImage } from 'fb/storage';
+import ProgressBar from 'components/ProgressBar';
 
 function PostPage() {
   const [post, setPost] = useState(null)
@@ -13,25 +14,20 @@ function PostPage() {
   const action = location.get('action')
   const postId = location.get('postId')
   const navigate = useNavigate()
-  const [process,setProcess] = useState(null)
-
-  useEffect(() => {
-    console.log(process)
-  },[process])
+  const [isOpen, setOpen] = useState(false)
+  const [progressTitle,setProgressTitle] = useState('')
+  const [progress,setProgress] = useState(0)
 
   const uploadImages = async (postId, files) => {
+    setProgressTitle('이미지 업로드 시작')
     const downloadUrls = []
-    setProcess(new Array(files.length).fill(0))
     for (let i = 0; i < files.length; i++) {
-      const url = await uploadImage(postId, files[i], (progress)=>
-      setProcess((prev)=>{
-        const newState = [...prev]
-        newState[i] = progress
-        return newState
-      }))
+      setProgressTitle(`${i+1} / ${files.length} 업로드 중`)
+      setProgress(0)
+      const url = await uploadImage(postId, files[i],setProgress)
       downloadUrls.push(url)
     }
-    console.log(downloadUrls)
+    setProgressTitle('이미지 업로드 완료')
     return downloadUrls
   }
   
@@ -39,7 +35,10 @@ function PostPage() {
     const { imageFiles, destination, period, partner, content, locationData} = postData
     try {
       const postId = v4()
+      setProgressTitle('글 저장 시작')
+      setOpen(true)
       const imageUrl = imageFiles ? await uploadImages(postId, imageFiles) : ''
+      setProgressTitle('글 저장 중')
       const newPost = {
         postId,
         destination,
@@ -51,6 +50,7 @@ function PostPage() {
         isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
+      setProgressTitle('글 저장 완료')
       navigate(`/`)
     } catch (error) {
       console.error(error)
@@ -58,13 +58,16 @@ function PostPage() {
   }
 
   const handleUpdatePost = async (postData) => {
-    setProcess('업데이트중')
+    setProgressTitle('업데이트 시작')
+    setOpen(true)
     const { isResetImage, postId, imageFiles, destination, period, partner, content } = postData
     try {
-      if (isResetImage || imageFiles) await deleteImage(postId)
-
+      if (isResetImage || imageFiles) {
+        setProgressTitle('기존 이미지 삭제 중')
+        await deleteImage(postId)
+      }
       const imageUrl = isResetImage ? '' : imageFiles ? await uploadImages(postId, imageFiles) : post.imageUrl
-
+      setProgressTitle('글 업데이트 중')
       const updatedPost = {}
       if (destination !== post.destination) updatedPost['destination'] = destination
       if (period !== post.period) updatedPost['period'] = period
@@ -72,8 +75,8 @@ function PostPage() {
       if (content !== post.content) updatedPost['content'] = content
       if (imageUrl !== post.imageUrl) updatedPost['imageUrl'] = imageUrl
       await updatePost(post.id, updatedPost)
-      setProcess('업데이트완료')
-      //navigate(`/post/${postId}`)
+      setProgressTitle('글 업데이트 완료')
+      navigate(`/post/${postId}`)
     } catch (error) {
       console.error(error)
     }
@@ -98,7 +101,9 @@ function PostPage() {
   return (
     <div>
       <PostForm  onSubmit={handleCreatePost}/>
-      <div>{process && process.map((x)=><span>{x}</span>)}</div>
+      {isOpen && 
+        (<ProgressBar value={progress} title={progressTitle}/>)
+      }
     </div>
   ) 
   else if (action === 'edit' && post)
@@ -109,9 +114,13 @@ function PostPage() {
         isEdit
         postData={post} 
       />
-      <div>{process !== null && process.map((x)=><li>{x}</li>)}</div>
+      {isOpen && 
+        (<ProgressBar value={progress} title={progressTitle}/>)
+      }
     </div>
   ) 
 }
 
 export default PostPage
+
+

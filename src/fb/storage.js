@@ -1,13 +1,5 @@
 import firebaseApp from '../firebase'
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  listAll,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from 'firebase/storage'
+import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytesResumable } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
 const storage = getStorage(firebaseApp)
 
@@ -36,7 +28,7 @@ export const uploadImage = async (postId, file, onProgress) => {
         }
       },
       (error) => {
-        // Handle unsuccessful uploads
+        reject(error)
       },
       () => {
         onProgress(100)

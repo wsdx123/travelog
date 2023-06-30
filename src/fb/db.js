@@ -10,7 +10,6 @@ import {
   updateDoc,
   deleteDoc,
   orderBy,
-  GeoPoint,
 } from 'firebase/firestore'
 
 const db = getFirestore(firebaseApp)
