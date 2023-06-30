@@ -1,10 +1,10 @@
 import { isFileSizeOver, sliceFilesMax } from "common"
-import { useRef, useState } from "react"
+import { memo, useMemo, useRef, useState } from "react"
 import { styled } from "styled-components"
 import Button from "./Button"
 import { Image } from "@phosphor-icons/react"
 
-export default function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
+function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
   const [imageFiles, setImageFiles] = useState(null)
   const [imageUrl, setImageUrl] = useState(initialImageUrl || null)
   const inputRef = useRef()
@@ -50,19 +50,20 @@ export default function UploadFileArea({ initialImageUrl, onChange, resetImage }
     onChange(null)
   }
 
-  const imageFileList = []
-
-
-  if(imageFiles) {
-    for(let i = 0; i < imageFiles.length; i++) {
-      imageFileList.push(<ImagePreview key={i} width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))}/>)
-    }
-  } else if (imageUrl) {
-    for(let i = 0; i < imageUrl.length; i++) {
-      imageFileList.push(<ImagePreview width={100} height={100} alt='image' src={imageUrl[i]}/>)
-    }
-  }
-
+  const imageFileList = useMemo(()=>{
+      const imagePreviewArray = [];
+      if(imageFiles) {
+        for(let i = 0; i < imageFiles.length; i++) {
+          imagePreviewArray.push(<ImagePreview key={i} width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))}/>)
+        }
+      } else if (imageUrl) {
+        for(let i = 0; i < imageUrl.length; i++) {
+          imagePreviewArray.push(<ImagePreview key={i} width={100} height={100} alt='image' src={imageUrl[i]}/>)
+        }
+      }
+      return imagePreviewArray
+    },[imageFiles,imageUrl])
+    
   return (
     <Container>
       <UploadZone onDragOver={handleDragOver} onDrop={handleDrop}>
@@ -91,6 +92,8 @@ export default function UploadFileArea({ initialImageUrl, onChange, resetImage }
       </ButtonContainer>
     </Container>)
 }
+
+export default memo(UploadFileArea)
 
 const UploadZone = styled.div`
   width: 400px;

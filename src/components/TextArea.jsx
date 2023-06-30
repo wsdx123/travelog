@@ -23,7 +23,7 @@ const StyledTextArea = styled.textarea`
     font-size: 1rem;
     outline: none;
     resize: none;
-    width: 200px;
+    width: 250px;
     height: 200px;
     &:hover,
     &:focus,

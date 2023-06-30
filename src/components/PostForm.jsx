@@ -1,83 +1,57 @@
 import { FloppyDisk, TrashSimple } from "@phosphor-icons/react"
-import { createPost, deletePost, updatePost } from "fb/db"
-import { deleteImage, uploadImages } from "fb/storage"
-import { useState } from "react"
+import { deletePost } from "fb/db"
+import { deleteImage,  } from "fb/storage"
+import { useState, memo } from "react"
 import { useNavigate } from "react-router-dom"
 import { styled } from "styled-components"
-import { v4 } from 'uuid'
 import Button from "./Button"
 import TextArea from "./TextArea"
 import SelectItem from "./SelectItem"
 import Select from "./Select"
 import InputText from "./InputText"
 import UploadFileArea from "./UploadFileArea"
-export default function PostForm({ isEdit, postData }) {
+import Modal from "./Modal"
+import { KakaoMap } from "./KakaoMap"
+function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
+  const [postData, setPostData] = useState({
+    destination: '',
+    period: '',
+    partner: '',
+    content: '',
+    ...initialPostData
+  })
   const [imageFiles, setImageFile] = useState(null)
-  const [destination, setDestination] = useState(isEdit ? postData.destination : '')
-  const [period, setPeriod] = useState(isEdit ? postData.period : '')
-  const [partner, setPartner] = useState(isEdit ? postData.partner : '')
-  const [content, setContent] = useState(isEdit ? postData.content : '')
+  // const [destination, setDestination] = useState(isEdit ? postData.destination : '')
+  // const [period, setPeriod] = useState(isEdit ? postData.period : '')
+  // const [partner, setPartner] = useState(isEdit ? postData.partner : '')
+  // const [content, setContent] = useState(isEdit ? postData.content : '')
   const [isResetImage, setResetImage] = useState(false)
-
+  const [isOpenLocationModal, setOpenLocationModal] = useState(false)
+  const [locationData,setLocationData] = useState({
+    name : initialPostData?.locationData.name, 
+    longitude :initialPostData?.locationData.longitude, 
+    latitude :initialPostData?.locationData.latitude  
+  })
   const navigate = useNavigate()
 
-  const handleChangeDestination = (e) => {
-    setDestination(e.target.value)
+  const handleChangeDestination = (destination) => {
+    // setDestination(value)
+    setPostData((prev)=>({...prev, destination}))
   }
 
-  const handleChangePeriod = (value) => {
-    setPeriod(value)
+  const handleChangePeriod = (period) => {
+    // setPeriod(value)
+    setPostData((prev)=>({...prev, period}))
   }
 
-  const handleChangePartner = (value) => {
-    setPartner(value)
+  const handleChangePartner = (partner) => {
+    // setPartner(value)
+    setPostData((prev)=>({...prev, partner}))
   }
 
-  const handleChangeContent = (value) => {
-    setContent(value)
-  }
-
-  const handleCreatePost = async (e) => {
-    e.preventDefault()
-    if (!validateForm()) return
-    try {
-      const postId = v4()
-      const imageUrl = imageFiles ? await uploadImages(postId, imageFiles) : ''
-      const newPost = {
-        postId,
-        destination,
-        period,
-        partner,
-        content,
-        imageUrl,
-        isLiked: false, // 하트용 Boolean 값 추가
-      }
-      await createPost(newPost)
-      navigate(`/`)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const handleUpdatePost = async (e) => {
-    e.preventDefault()
-    if (!validateForm()) return
-    try {
-      if (isResetImage || imageFiles) await deleteImage(postData.postId)
-
-      const imageUrl = isResetImage ? '' : imageFiles ? await uploadImages(postData.postId, imageFiles) : postData.imageUrl
-
-      const updatedPost = {}
-      if (destination !== postData.destination) updatedPost['destination'] = destination
-      if (period !== postData.period) updatedPost['period'] = period
-      if (partner !== postData.partner) updatedPost['partner'] = partner
-      if (content !== postData.content) updatedPost['content'] = content
-      if (imageUrl !== postData.imageUrl) updatedPost['imageUrl'] = imageUrl
-      await updatePost(postData.id, updatedPost)
-      navigate(`/post/${postData.postId}`)
-    } catch (error) {
-      console.error(error)
-    }
+  const handleChangeContent = (content) => {
+    // setContent(value)
+    setPostData((prev)=>({...prev, content}))
   }
 
   const handleCancel = () => {
@@ -85,15 +59,15 @@ export default function PostForm({ isEdit, postData }) {
   }
 
   const validateForm = () => {
-    if (!destination.trim()) {
+    if (!postData.destination.trim()) {
       alert('여행지를 입력해 주세요')
       return false
     }
-    if (!period.trim()) {
+    if (!postData.period.trim()) {
       alert('여행 시기를 선택해 주세요')
       return false
     }
-    if (!partner.trim()) {
+    if (!postData.partner.trim()) {
       alert('여행 파트너를 선택해 주세요')
       return false
     }
@@ -110,9 +84,19 @@ export default function PostForm({ isEdit, postData }) {
     }
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if(validateForm) onSubmit({
+      ...postData,
+      imageFiles,
+      isResetImage,
+      locationData
+    })
+  }
+
   return (
     <>
-      <form onSubmit={isEdit ? handleUpdatePost : handleCreatePost}>
+      <form onSubmit={handleSubmit}>
         <FormInner>
           <UploadFileArea
             resetImage={setResetImage}
@@ -124,11 +108,15 @@ export default function PostForm({ isEdit, postData }) {
               <label htmlFor='travel_destination'>여행지: </label>
               <InputText
                 name='travel_destination'
-                id='travel_destination'
                 placeholder='여행지'
                 onChange={handleChangeDestination}
-                value={destination}
+                value={postData.destination}
               />
+            </FormRow>
+            <FormRow>
+              <label name='travel_location'>위치: </label>
+              <p>{locationData?.name}</p>
+              {!isEdit && <Button onClick={()=>setOpenLocationModal(true)}>위치 찾기</Button>}
             </FormRow>
             <FormRow>
             <label htmlFor='travel_period'>여행 시기: </label>
@@ -137,7 +125,7 @@ export default function PostForm({ isEdit, postData }) {
                 title='여행 시기'
                 placeholder='여행 시기'
                 onChange={handleChangePeriod}
-                defaultValue={period}
+                defaultValue={postData.period}
               >
                 <SelectItem value='spring'>봄</SelectItem>
                 <SelectItem value='summer'>여름</SelectItem>
@@ -152,7 +140,7 @@ export default function PostForm({ isEdit, postData }) {
                 title='함께 여행한 사람'
                 placeholder='함께 여행한 사람'
                 onChange={handleChangePartner}
-                defaultValue={partner}
+                defaultValue={postData.partner}
               >
                 <SelectItem value='family'>가족</SelectItem>
                 <SelectItem value='couple'>커플</SelectItem>
@@ -164,7 +152,7 @@ export default function PostForm({ isEdit, postData }) {
             <FormRow>
               <TextArea
                 placeholder='나의 후기를 작성해봅시다.'
-                value={content}
+                value={postData.content}
                 onChange={handleChangeContent}
               />
             </FormRow>
@@ -191,12 +179,17 @@ export default function PostForm({ isEdit, postData }) {
           </FormMenu>
         </FormInner>
       </form>
+      {isOpenLocationModal && <Modal title="위치 선택" closeFunc={() => setOpenLocationModal(false)}>
+        <KakaoMap onChange={setLocationData} />
+      </Modal>}
     </>
   )
 }
 
+export default memo(PostForm)
+
 const FormMenu = styled.div`
-  gap: 10px;
+  gap: 14px;
   display: flex;
   flex-direction: column;
 `

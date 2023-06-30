@@ -19,7 +19,7 @@ const InputText = ({value, onChange, id, name, placeholder,...props}) => {
       type='text' 
       name={name} 
       id={id} 
-      onChange={onChange} 
+      onChange={(e)=> onChange(e.target.value)} 
       value={value} 
       placeholder={placeholder}
       {...props}

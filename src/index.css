@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.customOverlay {
+  border-radius: 8px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  left: 0;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  bottom: 24px;
+  width: 180px;
+  max-width: 200px;
+  background-color: white;
+  padding: 10px;
+  white-space: normal;
+  word-break: break-all;
+}
