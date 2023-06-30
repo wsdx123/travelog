@@ -1,12 +1,12 @@
-
-import { useQuery } from 'hooks';
-import { createPost, deletePost, getPostByPostId, updatePost } from '../fb/db';
-import { deleteImage, uploadImages } from '../fb/storage';
+import { useQuery } from 'hooks'
+import { createPost, deletePost, getPostByPostId, updatePost } from '../fb/db'
+import { deleteImage, uploadImages } from '../fb/storage'
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { redirect, useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
+import { auth } from 'firebase.js'
 
 const KB = 1024
 const MB = 1024 ** 2
@@ -69,21 +69,20 @@ const ImagePreviewContainer = styled.div`
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3,1fr);
+  grid-template-rows: repeat(3, 1fr);
   align-items: center;
   justify-items: center;
 `
 
 const ImagePreview = styled.img`
   background-color: #fff;
-  border: 2px solid #0099FF;
+  border: 2px solid #0099ff;
   border-radius: 20px;
   display: inline-block;
   object-fit: contain;
   -webkit-user-drag: none;
   -moz-user-drag: none;
   -ms-user-drag: none;
-
 `
 
 function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
@@ -97,12 +96,14 @@ function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
 
   const sliceFilesMax = (files) => {
     console.log(files)
-    if(files.length > 9) {
-      const filesResult = new DataTransfer();
-      Array.from(files).slice(0,9).forEach((file=> filesResult.items.add(file)))
+    if (files.length > 9) {
+      const filesResult = new DataTransfer()
+      Array.from(files)
+        .slice(0, 9)
+        .forEach((file) => filesResult.items.add(file))
       console.log(filesResult)
       return filesResult.files
-    } 
+    }
     return files
   }
 
@@ -147,78 +148,83 @@ function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
     if (imageFiles) console.log(imageFiles)
   })
 
-
   const imageFileList = []
 
-
-  if(imageFiles) {
-    for(let i = 0; i < imageFiles.length; i++) {
-      imageFileList.push(<ImagePreview key={i} width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))}/>)
+  if (imageFiles) {
+    for (let i = 0; i < imageFiles.length; i++) {
+      imageFileList.push(
+        <ImagePreview
+          key={i}
+          width={100}
+          height={100}
+          alt={imageFiles.item(i).name}
+          src={URL.createObjectURL(imageFiles.item(i))}
+        />
+      )
     }
   } else if (imageUrl) {
-    for(let i = 0; i < imageUrl.length; i++) {
-      imageFileList.push(<ImagePreview width={100} height={100} alt='image' src={imageUrl[i]}/>)
+    for (let i = 0; i < imageUrl.length; i++) {
+      imageFileList.push(<ImagePreview width={100} height={100} alt='image' src={imageUrl[i]} />)
 
-//   if (imageFiles) {
-//     for (let i = 0; i < imageFiles.length; i++) {
-//       imageFileList.push(
-//         <div key={i}>
-//           <div>
-//             <img width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))} />
-//           </div>
-//           {imageFiles.item(i).name} {convertBytesToString(imageFiles.item(i).size)}{' '}
-//         </div>
-//       )
-//     }
-//   } else if (initialImageUrl) {
-//     for (let i = 0; i < initialImageUrl.length; i++) {
-//       imageFileList.push(
-//         <div key={i}>
-//           <div>
-//             <img width={100} height={100} alt='image' src={initialImageUrl[i]} />
-//           </div>
-//         </div>
-//       )
-
+      //   if (imageFiles) {
+      //     for (let i = 0; i < imageFiles.length; i++) {
+      //       imageFileList.push(
+      //         <div key={i}>
+      //           <div>
+      //             <img width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))} />
+      //           </div>
+      //           {imageFiles.item(i).name} {convertBytesToString(imageFiles.item(i).size)}{' '}
+      //         </div>
+      //       )
+      //     }
+      //   } else if (initialImageUrl) {
+      //     for (let i = 0; i < initialImageUrl.length; i++) {
+      //       imageFileList.push(
+      //         <div key={i}>
+      //           <div>
+      //             <img width={100} height={100} alt='image' src={initialImageUrl[i]} />
+      //           </div>
+      //         </div>
+      //       )
     }
   }
 
   return (
     <>
       <UploadZone onDragOver={handleDragOver} onDrop={handleDrop}>
-        <input
-          type='file'
-          accept='image/*'
-          onChange={handleUploadInput}
-          multiple
-          hidden
-          ref={inputRef}
-        />
-        {imageFileList.length > 0 || imageUrl ? <ImagePreviewContainer>{imageFileList}</ImagePreviewContainer> : <button style={{position:'absolute'}} type='button' onClick={() => inputRef.current.click()}>이미지 선택</button>}
+        <input type='file' accept='image/*' onChange={handleUploadInput} multiple hidden ref={inputRef} />
+        {imageFileList.length > 0 || imageUrl ? (
+          <ImagePreviewContainer>{imageFileList}</ImagePreviewContainer>
+        ) : (
+          <button style={{ position: 'absolute' }} type='button' onClick={() => inputRef.current.click()}>
+            이미지 선택
+          </button>
+        )}
       </UploadZone>
       <div>
-
-        
-        <button type='button' onClick={handleUseExistImage}>원래대로</button>
-        <button type='button' onClick={handleResetImage}>삭제</button>
+        <button type='button' onClick={handleUseExistImage}>
+          원래대로
+        </button>
+        <button type='button' onClick={handleResetImage}>
+          삭제
+        </button>
       </div>
-      
-    </>)
+    </>
+  )
 
-//         <button type='button' onClick={() => inputRef.current.click()}>
-//           이미지 선택
-//         </button>
-//         <button type='button' onClick={handleUseExistImage}>
-//           원래대로
-//         </button>
-//         <button type='button' onClick={handleResetImage}>
-//           삭제
-//         </button>
-//       </div>
-//       {imageFileList.length > 0 || initialImageUrl ? imageFileList : null}
-//     </>
-//   )
-
+  //         <button type='button' onClick={() => inputRef.current.click()}>
+  //           이미지 선택
+  //         </button>
+  //         <button type='button' onClick={handleUseExistImage}>
+  //           원래대로
+  //         </button>
+  //         <button type='button' onClick={handleResetImage}>
+  //           삭제
+  //         </button>
+  //       </div>
+  //       {imageFileList.length > 0 || initialImageUrl ? imageFileList : null}
+  //     </>
+  //   )
 }
 
 function PostForm({ isEdit, postData }) {
@@ -253,6 +259,7 @@ function PostForm({ isEdit, postData }) {
     try {
       const postId = uuidv4()
       const imageUrl = imageFiles ? await uploadImages(postId, imageFiles) : ''
+      const uid = auth.currentUser.uid
       const newPost = {
         postId,
         destination,
@@ -260,6 +267,7 @@ function PostForm({ isEdit, postData }) {
         partner,
         content,
         imageUrl,
+        uid,
         isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
@@ -276,14 +284,17 @@ function PostForm({ isEdit, postData }) {
       //  if(isResetImage && postData.imageUrl) deletePostImage(postData.postId)
       if (isResetImage || imageFiles) await deleteImage(postData.postId)
 
-      const imageUrl = isResetImage ? '' : imageFiles ? await uploadImages(postData.postId, imageFiles) : postData.imageUrl
+      const imageUrl = isResetImage
+        ? ''
+        : imageFiles
+        ? await uploadImages(postData.postId, imageFiles)
+        : postData.imageUrl
 
-//       const imageUrl = isResetImage
-//         ? ''
-//         : imageFiles
-//         ? await uploadImage(postData.postId, imageFiles)
-//         : postData.imageUrl
-
+      //       const imageUrl = isResetImage
+      //         ? ''
+      //         : imageFiles
+      //         ? await uploadImage(postData.postId, imageFiles)
+      //         : postData.imageUrl
 
       const updatedPost = {}
       if (destination !== postData.destination) updatedPost['destination'] = destination
@@ -327,7 +338,6 @@ function PostForm({ isEdit, postData }) {
       console.error(error)
     }
   }
-
 
   return (
     <>

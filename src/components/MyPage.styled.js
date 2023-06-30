@@ -88,11 +88,12 @@ export const PostBtnContainer = styled.div`
 export const CardContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+`
 
-  div {
-    width: 80px;
-    height: 80px;
-    margin: 10px;
-    border: 1px solid green;
-  }
+export const CardItem = styled.div`
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+  border: 1px solid green;
+  cursor: pointer;
 `

@@ -4,7 +4,7 @@ import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/fire
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useEffect, useState } from 'react'
 
-import * as S from 'components/Profile.styled.js'
+import * as S from 'components/MyPage.styled.js'
 import UpdateProfile from 'components/UpdateProfile'
 import Profile from 'components/Profile'
 import { useParams } from 'react-router-dom'
@@ -88,16 +88,17 @@ function MyPage() {
     fetchData()
   }, [params.myId])
 
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     const q = query(collection(db, 'posts'), where('uid','==', params.myId))
-  //     const snapShot = await getDocs(q)
-  //     snapShot.forEach((doc) => {
-  //       setTmp((prev) => [...prev, doc.data()])
-  //     })
-  //   }
-  //   fetchPosts()
-  // },[params.myId, posts])
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const idQuery = query(collection(db, 'posts'), where('uid', '==', params.myId))
+      const likedQuery = query(collection(db, 'posts'), where('isLiked', '==', true))
+      const snapShot = await getDocs(posts ? idQuery : likedQuery)
+      snapShot.forEach((doc) => {
+        setTmp((prev) => [...prev, doc.data()])
+      })
+    }
+    fetchPosts()
+  }, [params.myId, posts])
 
   return (
     <S.MyPageContainer>

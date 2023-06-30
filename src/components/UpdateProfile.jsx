@@ -1,4 +1,4 @@
-import * as S from 'components/Profile.styled.js'
+import * as S from 'components/MyPage.styled.js'
 
 function UpdateProfile({
   handleInput,
