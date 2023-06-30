@@ -1,23 +1,28 @@
 import { storage } from 'fb/storage'
-import { auth, db } from 'firebase.js'
+import { db } from 'firebase.js'
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useEffect, useState } from 'react'
-import empty from 'pages/user.png'
 
 import * as S from 'components/Profile.styled.js'
 import UpdateProfile from 'components/UpdateProfile'
 import Profile from 'components/Profile'
+import { useParams } from 'react-router-dom'
+import PostCards from 'components/PostCards'
 
 function MyPage() {
   const [userName, setUserName] = useState('')
   const [userIntro, setUserIntro] = useState('')
   const [userPlaces, setUserPlaces] = useState('')
   const [preview, setPreview] = useState(null)
+  const [posts, setPosts] = useState(true)
+  const [tmp, setTmp] = useState([])
 
   const [imgFile, setImgFile] = useState(null)
   const [userInfo, setUserInfo] = useState({})
   const [userUpdate, setUserUpdate] = useState(false)
+
+  const params = useParams()
 
   const handleInput = (e) => {
     const { value, name } = e.target
@@ -48,7 +53,7 @@ function MyPage() {
       await updateDoc(infoRef, newInfo)
       setUserInfo(newInfo)
     } else {
-      const imageRef = ref(storage, `${auth.currentUser.uid}/${imgFile.name}`)
+      const imageRef = ref(storage, `${params.myId}/${imgFile.name}`)
       await uploadBytes(imageRef, imgFile)
 
       const downloadURL = await getDownloadURL(imageRef)
@@ -61,9 +66,16 @@ function MyPage() {
     setUserUpdate(false)
   }
 
+  const handleMyPosts = () => {
+    setPosts(true)
+  }
+  const handleLikePosts = () => {
+    setPosts(false)
+  }
+
   useEffect(() => {
     const fetchData = async () => {
-      const q = query(collection(db, 'users'), where('id', '==', auth.currentUser.uid))
+      const q = query(collection(db, 'users'), where('id', '==', params.myId))
       const snapShot = await getDocs(q)
       snapShot.forEach((doc) => {
         setUserInfo(doc.data())
@@ -74,7 +86,18 @@ function MyPage() {
       })
     }
     fetchData()
-  }, [])
+  }, [params.myId])
+
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     const q = query(collection(db, 'posts'), where('uid','==', params.myId))
+  //     const snapShot = await getDocs(q)
+  //     snapShot.forEach((doc) => {
+  //       setTmp((prev) => [...prev, doc.data()])
+  //     })
+  //   }
+  //   fetchPosts()
+  // },[params.myId, posts])
 
   return (
     <S.MyPageContainer>
@@ -97,16 +120,17 @@ function MyPage() {
 
       <S.PostContainer>
         <S.PostBtnContainer>
-          <button type='button'>내가 작성한 게시물</button>
-          <button type='button'>내가 좋아한 게시물</button>
+          <button type='button' onClick={handleMyPosts}>
+            내가 작성한 게시물
+          </button>
+          <button type='button' onClick={handleLikePosts}>
+            내가 좋아한 게시물
+          </button>
         </S.PostBtnContainer>
         <S.CardContainer>
-          <div>카드</div>
-          <div>카드</div>
-          <div>카드</div>
-          <div>카드</div>
-          <div>카드</div>
-          <div>카드</div>
+          {tmp.map((el) => (
+            <PostCards data={el} key={el.id} />
+          ))}
         </S.CardContainer>
       </S.PostContainer>
     </S.MyPageContainer>
