@@ -18,7 +18,7 @@ const db = getFirestore(firebaseApp)
 export const createPost = async (postData) => {
   return await addDoc(collection(db, 'posts'), {
     ...postData,
-    created_at: new Date().getTime(),
+    createdAt: new Date().getTime(),
   })
 }
 
