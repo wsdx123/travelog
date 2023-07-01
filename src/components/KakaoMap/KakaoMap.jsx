@@ -1,7 +1,7 @@
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -15,20 +15,18 @@ const KakaoMap = ({ onChange }) => {
   const placesRef = useRef();
   const overlayRef = useRef();
   const [keyword, setKeyword] = useState("");
-  const [placeResult, setPlaceResult] = useState(null);
-  const [addressResult, setAddressResult] = useState(null);
-  const [coordsResult, setCoordsResult] = useState(null);
+  const [placeResult, setPlaceResult] = useState([]);
+  const [addressResult, setAddressResult] = useState([]);
+  const [coordsResult, setCoordsResult] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
-  const [menu, setMenu] = useState("place");
+  const [menu, setMenu] = useState("coords");
 
   useEffect(()=>{
-    console.log(selectedPlace)
   },[selectedPlace])
 
   const openOverlay = useCallback(
     (title, position) => {
-      console.log(position)
       const overlayPosition = new kakao.maps.LatLng(
         position.latitude,
         position.longitude
@@ -55,7 +53,6 @@ const KakaoMap = ({ onChange }) => {
       alert("키워드를 입력해주세요.");
       return false;
     }
-    console.log("keyword: ", keyword);
     placesRef.current.keywordSearch(keyword, placesSearchCB);
     geocoderRef.current.addressSearch(keyword, addressSearchCB, { size: 30 });
   }
@@ -93,15 +90,12 @@ const KakaoMap = ({ onChange }) => {
   );
 
   function placesSearchCB(data, status) {
-    console.log(status);
     if (status === kakao.maps.services.Status.OK) {
-      console.log("place");
       const result = data.map((place) => ({
         name: place.place_name,
         longitude: place.x,
         latitude: place.y,
       }));
-      console.log(data);
       setPlaceResult(result); // 성공시 장소 표시
     } else if (status === kakao.maps.services.Status.ERROR) {
       alert("검색 결과 중 오류가 발생했습니다.");
@@ -111,13 +105,11 @@ const KakaoMap = ({ onChange }) => {
 
   function addressSearchCB(data, status) {
     if (status === kakao.maps.services.Status.OK) {
-      console.log("address");
       const result = data.map((address) => ({
         name: address.address_name,
         longitude: address.x,
         latitude: address.y,
       }));
-      console.log(result);
       setAddressResult(result);
     } else if (status === kakao.maps.services.Status.ERROR) {
       alert("검색 결과 중 오류가 발생했습니다.");
@@ -141,15 +133,16 @@ const KakaoMap = ({ onChange }) => {
           latitude,
           coordsSearchCB
         );
+      },
+      (error)=> {
+        setCurrentPosition({name:"기본 위치", longitude: 126.978652258309, latitude : 37.566826004661 });
       });
-    } else {
-      setCurrentPosition({ longitude: 126.978652258309, latitude : 37.566826004661 });
     }
+    setCurrentPosition({name:"기본 위치", longitude: 126.978652258309, latitude : 37.566826004661 });
   }, [setCurrentPosition, openOverlay, geocoderRef, coordsSearchCB]);
 
   useEffect(() => {
     if (selectedPlace) {
-      console.log(selectedPlace)
       openOverlay(selectedPlace.name, {
         longitude: selectedPlace.longitude,
         latitude: selectedPlace.latitude,
@@ -159,12 +152,11 @@ const KakaoMap = ({ onChange }) => {
   }, [selectedPlace, onChange, openOverlay]);
 
   useEffect(() => {
-    console.log("menu: ", menu);
-    if (menu === "place" && placeResult) setBoundary(placeResult);
-    if (menu === "address" && addressResult) setBoundary(addressResult);
+    if (menu === "place" && placeResult?.length > 0) setBoundary(placeResult);
+    if (menu === "address" && placeResult?.length > 0) setBoundary(addressResult);
   }, [menu, placeResult, addressResult]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     kakao.maps.load(function () {
       const container = document.getElementById("map");
       const position = new kakao.maps.LatLng(
@@ -184,6 +176,7 @@ const KakaoMap = ({ onChange }) => {
         map: map,
       });
       overlay.setMap(map);
+      overlay.setVisible(false);
       const places = new kakao.maps.services.Places();
       const geocoder = new kakao.maps.services.Geocoder();
       mapRef.current = map;
@@ -193,6 +186,14 @@ const KakaoMap = ({ onChange }) => {
       getUserPosition();
     });
   }, [getUserPosition]);
+
+const renderPoints = useMemo(()=>{
+  let list = []
+  if(menu === 'place') list = placeResult
+  else if(menu === 'address') list = addressResult
+  else if(menu === 'coords') list = currentPosition ? [currentPosition,...coordsResult] : coordsResult
+  return list
+},[menu, placeResult, addressResult, currentPosition, coordsResult])
 
   return (
     <>
@@ -217,17 +218,7 @@ const KakaoMap = ({ onChange }) => {
             </svg>
           </S.GetPositionIcon>
         </div>
-
-        {menu === "place" &&
-          placeResult?.map((place, i) => (
-            <Marker key={i} map={mapRef.current} place={place} />
-          ))}
-        {menu === "address" &&
-          addressResult?.map((place, i) => (
-            <Marker key={i} map={mapRef.current} place={place} />
-          ))}
-        {menu === "coords" &&
-          [currentPosition, ...coordsResult].map((place, i) => (
+        {renderPoints.map((place, i) => (
             <Marker key={i} map={mapRef.current} place={place} />
           ))}
         <S.MenuWrapper id="menu_wrap">
@@ -251,36 +242,30 @@ const KakaoMap = ({ onChange }) => {
           </form>
           <S.TabMenu>
             <S.TabMenuItem
-              isSelected={(menu === "place").toString()}
+              $isSelected={(menu === "coords").toString()}
+              type="button"
+              onClick={() => setMenu("coords")}
+            >
+              현재 위치
+            </S.TabMenuItem>
+            <S.TabMenuItem
+              $isSelected={(menu === "place").toString()}
               type="button"
               onClick={() => setMenu("place")}
             >
               장소
             </S.TabMenuItem>
             <S.TabMenuItem
-              isSelected={(menu === "address").toString()}
+              $isSelected={(menu === "address").toString()}
               type="button"
               onClick={() => setMenu("address")}
             >
               지역
             </S.TabMenuItem>
-            <S.TabMenuItem
-              isSelected={(menu === "coords").toString()}
-              type="button"
-              onClick={() => setMenu("coords")}
-            >
-              현재 위치
-            </S.TabMenuItem>
           </S.TabMenu>
           {
             <PlacesList
-              places={
-                menu === "place"
-                  ? placeResult
-                  : menu === "address"
-                  ? addressResult
-                  : [currentPosition, ...coordsResult]
-              }
+              places={renderPoints}
               selectPlace={setSelectedPlace}
               selectedPlace={selectedPlace}
             />
@@ -292,17 +277,16 @@ const KakaoMap = ({ onChange }) => {
 };
 
 function PlacesList({ places, selectPlace, selectedPlace }) {
-  console.log(places);
   return (
     <S.StyledList id="placesList">
-      {places &&
+      {places?.length > 0 &&
         places.map((place, i) => (
           <S.StyledListItem
             key={i}
             onClick={() =>
               selectPlace({ name: place.name, longitude: parseFloat(place.longitude), latitude: parseFloat(place.latitude ) })
             }
-            isSelected={place.name === selectedPlace?.name}
+            $isSelected={place.name === selectedPlace?.name}
           >
             {place.name}
           </S.StyledListItem>
@@ -313,7 +297,7 @@ function PlacesList({ places, selectPlace, selectedPlace }) {
 
 function Marker({ map, place }) {
   useEffect(() => {
-    const markerPosition = new kakao.maps.LatLng(place.y, place.x);
+    const markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
     const marker = new kakao.maps.Marker({
       position: markerPosition,
       clickable: true,

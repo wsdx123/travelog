@@ -37,8 +37,8 @@ export const StyledListItem = styled.li`
   &:not(:last-child) {
     border-bottom: 1px solid #eee;
   }
-  ${({ isSelected }) =>
-    isSelected &&
+  ${({ $isSelected }) =>
+    $isSelected &&
     css`
       background-color: #ebebeb;
       cursor: default;
@@ -99,8 +99,8 @@ export const TabMenuItem = styled.button`
   padding: 0.5rem 1.2rem;
   cursor: pointer;
 
-  ${({ isSelected }) =>
-    isSelected === 'true' &&
+  ${({ $isSelected }) =>
+    $isSelected === 'true' &&
     css`
       background-color: #0099ff;
       color: #fff;
