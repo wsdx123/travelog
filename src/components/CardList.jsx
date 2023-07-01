@@ -36,7 +36,6 @@ function CardList() {
     <div>
       CardList
       {posts.map((post) => {
-        const heart = post.isLiked ? 'heartFilled' : 'heartEmpty'
         // 불리안 값으로 좋아요 하트 상태 변경
 
         return <CardItem key={`cardKey__${post.postId}`} post={post} />

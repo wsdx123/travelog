@@ -17,7 +17,6 @@ function MyPage() {
   const [preview, setPreview] = useState(null)
   const [posts, setPosts] = useState(true)
   const [tmp, setTmp] = useState([])
-  const temp = []
 
   const [imgFile, setImgFile] = useState(null)
   const [userInfo, setUserInfo] = useState({})
