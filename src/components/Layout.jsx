@@ -38,7 +38,7 @@ function Header() {
     await signOut(auth)
     navigate('/')
   }
-  console.log(auth.currentUser)
+
   return (
     <div style={{ ...HeaderStyles }}>
       <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>

@@ -7,12 +7,15 @@ import PostForm from 'components/PostForm';
 import { v4 } from 'uuid'
 import { deleteImage, uploadImage } from 'fb/storage';
 import ProgressBar from 'components/ProgressBar';
+import { auth } from 'firebase.js'
+
 
 function PostPage() {
   const [post, setPost] = useState(null)
   const location = useQuery()
   const action = location.get('action')
   const postId = location.get('postId')
+
   const navigate = useNavigate()
   const [isOpen, setOpen] = useState(false)
   const [progressTitle,setProgressTitle] = useState('')
@@ -30,15 +33,19 @@ function PostPage() {
     setProgressTitle('이미지 업로드 완료')
     return downloadUrls
   }
-  
+
   const handleCreatePost = async (postData) => {
     const { imageFiles, destination, period, partner, content, locationData} = postData
+
     try {
       const postId = v4()
       setProgressTitle('글 저장 시작')
       setOpen(true)
       const imageUrl = imageFiles ? await uploadImages(postId, imageFiles) : ''
+
       setProgressTitle('글 저장 중')
+      const uid = auth.currentUser.uid
+
       const newPost = {
         postId,
         destination,
@@ -47,6 +54,7 @@ function PostPage() {
         content,
         imageUrl,
         locationData,
+        uid,
         isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
@@ -68,6 +76,7 @@ function PostPage() {
       }
       const imageUrl = isResetImage ? '' : imageFiles ? await uploadImages(postId, imageFiles) : post.imageUrl
       setProgressTitle('글 업데이트 중')
+      
       const updatedPost = {}
       if (destination !== post.destination) updatedPost['destination'] = destination
       if (period !== post.period) updatedPost['period'] = period
@@ -98,6 +107,7 @@ function PostPage() {
   }, [postId, loadPost])
 
   if (action === 'write') 
+
   return (
     <div>
       <PostForm  onSubmit={handleCreatePost}/>

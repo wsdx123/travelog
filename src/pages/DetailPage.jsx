@@ -7,7 +7,6 @@ import { deletePost, getPostByPostId } from 'fb/db'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 function DetailPage() {
-
   const [post, setPost] = useState(null)
   const { postId } = useParams()
 
@@ -15,7 +14,7 @@ function DetailPage() {
 
   const dispatch = useDispatch()
   const comments = useSelector((state) => {
-    return state.comments
+    return state.details // comments -> details
   })
   const [comment, setComment] = useState('')
   const [editComment, setEditComment] = useState('')
@@ -56,7 +55,7 @@ function DetailPage() {
         <p>isLiked: {post.isLiked.toString()}</p>
       </div>
 
-      {/* <form
+      <form
         onSubmit={(e) => {
           e.preventDefault()
 
@@ -129,7 +128,7 @@ function DetailPage() {
             </div>
           )
         })}
-      </div> */}
+      </div>
     </>
   )
 }
