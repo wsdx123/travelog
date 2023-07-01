@@ -94,6 +94,16 @@ export const CardItem = styled.div`
   width: 80px;
   height: 80px;
   margin: 10px;
-  border: 1px solid green;
+  /* border: 1px solid green; */
   cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.25s ease-in-out;
+    &:hover {
+      opacity: 0.6;
+    }
+  }
 `
