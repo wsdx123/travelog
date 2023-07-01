@@ -1,5 +1,5 @@
 import { auth, db } from 'firebase.js'
-import { arrayRemove, arrayUnion, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore'
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -28,6 +28,7 @@ function CardItem({ post }) {
     }
   }
   useEffect(() => {
+    if (!auth.currentUser) return
     const fetchHeart = async () => {
       const snapShot = await getDoc(doc(db, 'likes', post.postId))
       if (snapShot.data().likedList.includes(auth.currentUser.uid)) {
