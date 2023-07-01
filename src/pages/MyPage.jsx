@@ -98,14 +98,18 @@ function MyPage() {
           setTmp((prev) => [...prev, doc.data()])
         })
       } else {
+        const temp = []
         const q = query(collection(db, 'likes'), where('likedList', 'array-contains', params.myId))
-        // console.log(q)
+        const snapShot = await getDocs(q)
+        snapShot.forEach((doc) => {
+          temp.push(doc.id)
+        })
 
-        // const snapShot = await getDocs(q)
-        // snapShot.forEach((doc) => {
-        //   temp.push(doc.id() or doc.data().postId)
-        // })
-        // const q1 = query(collection(db, 'posts'), where('postId','in',temp))
+        const q1 = query(collection(db, 'posts'), where('postId', 'in', temp))
+        const snapshot1 = await getDocs(q1)
+        snapshot1.forEach((doc) => {
+          setTmp((prev) => [...prev, doc.data()])
+        })
       }
     }
     setTmp([])
