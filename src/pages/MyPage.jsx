@@ -17,6 +17,7 @@ function MyPage() {
   const [preview, setPreview] = useState(null)
   const [posts, setPosts] = useState(true)
   const [tmp, setTmp] = useState([])
+  const temp = []
 
   const [imgFile, setImgFile] = useState(null)
   const [userInfo, setUserInfo] = useState({})
@@ -90,15 +91,27 @@ function MyPage() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const idQuery = query(collection(db, 'posts'), where('uid', '==', params.myId))
-      const likedQuery = query(collection(db, 'posts'), where('isLiked', '==', true))
-      const snapShot = await getDocs(posts ? idQuery : likedQuery)
-      snapShot.forEach((doc) => {
-        setTmp((prev) => [...prev, doc.data()])
-      })
+      if (posts) {
+        const q = query(collection(db, 'posts'), where('uid', '==', params.myId))
+        const snapShot = await getDocs(q)
+        snapShot.forEach((doc) => {
+          setTmp((prev) => [...prev, doc.data()])
+        })
+      } else {
+        const q = query(collection(db, 'likes'), where('likedList', 'array-contains', params.myId))
+        // console.log(q)
+
+        // const snapShot = await getDocs(q)
+        // snapShot.forEach((doc) => {
+        //   temp.push(doc.id() or doc.data().postId)
+        // })
+        // const q1 = query(collection(db, 'posts'), where('postId','in',temp))
+      }
     }
+    setTmp([])
     fetchPosts()
   }, [params.myId, posts])
+  console.log(tmp)
 
   return (
     <S.MyPageContainer>
@@ -130,7 +143,7 @@ function MyPage() {
         </S.PostBtnContainer>
         <S.CardContainer>
           {tmp.map((el) => (
-            <PostCards data={el} key={el.id} />
+            <PostCards key={`PostCards_${el.postId}`} data={el} />
           ))}
         </S.CardContainer>
       </S.PostContainer>

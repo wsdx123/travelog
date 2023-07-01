@@ -6,7 +6,7 @@ function PostCards({ data }) {
   const navigateDetail = () => {
     navigate(`/postPage/${data.postId}`)
   }
-  console.log(data)
+  // console.log(data)
   return <S.CardItem onClick={navigateDetail}>{data.destination}</S.CardItem>
 }
 

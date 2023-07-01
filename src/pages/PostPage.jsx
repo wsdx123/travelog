@@ -1,14 +1,13 @@
-
-import { useQuery } from 'hooks';
-import { createPost, getPostByPostId, updatePost,  } from '../fb/db';
+import { useQuery } from 'hooks'
+import { createPost, getPostByPostId, updatePost } from '../fb/db'
 import React, { useCallback, useEffect, useState } from 'react'
 import { redirect, useNavigate } from 'react-router-dom'
-import PostForm from 'components/PostForm';
+import PostForm from 'components/PostForm'
 import { v4 } from 'uuid'
-import { deleteImage, uploadImage } from 'fb/storage';
-import ProgressBar from 'components/ProgressBar';
-import { auth } from 'firebase.js'
-
+import { deleteImage, uploadImage } from 'fb/storage'
+import ProgressBar from 'components/ProgressBar'
+import { auth, db } from 'firebase.js'
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 
 function PostPage() {
   const [post, setPost] = useState(null)
@@ -18,16 +17,16 @@ function PostPage() {
 
   const navigate = useNavigate()
   const [isOpen, setOpen] = useState(false)
-  const [progressTitle,setProgressTitle] = useState('')
-  const [progress,setProgress] = useState(0)
+  const [progressTitle, setProgressTitle] = useState('')
+  const [progress, setProgress] = useState(0)
 
   const uploadImages = async (postId, files) => {
     setProgressTitle('이미지 업로드 시작')
     const downloadUrls = []
     for (let i = 0; i < files.length; i++) {
-      setProgressTitle(`${i+1} / ${files.length} 업로드 중`)
+      setProgressTitle(`${i + 1} / ${files.length} 업로드 중`)
       setProgress(0)
-      const url = await uploadImage(postId, files[i],setProgress)
+      const url = await uploadImage(postId, files[i], setProgress)
       downloadUrls.push(url)
     }
     setProgressTitle('이미지 업로드 완료')
@@ -35,7 +34,8 @@ function PostPage() {
   }
 
   const handleCreatePost = async (postData) => {
-    const { imageFiles, destination, period, partner, content, locationData} = postData
+    const { imageFiles, destination, period, partner, content, locationData } = postData
+    const uid = auth.currentUser.uid
 
     try {
       const postId = v4()
@@ -44,7 +44,6 @@ function PostPage() {
       const imageUrl = imageFiles ? await uploadImages(postId, imageFiles) : ''
 
       setProgressTitle('글 저장 중')
-      const uid = auth.currentUser.uid
 
       const newPost = {
         postId,
@@ -58,6 +57,9 @@ function PostPage() {
         isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
+      await setDoc(doc(db, 'likes', postId), {
+        likedList: [],
+      })
       setProgressTitle('글 저장 완료')
       navigate(`/`)
     } catch (error) {
@@ -76,7 +78,7 @@ function PostPage() {
       }
       const imageUrl = isResetImage ? '' : imageFiles ? await uploadImages(postId, imageFiles) : post.imageUrl
       setProgressTitle('글 업데이트 중')
-      
+
       const updatedPost = {}
       if (destination !== post.destination) updatedPost['destination'] = destination
       if (period !== post.period) updatedPost['period'] = period
@@ -90,7 +92,7 @@ function PostPage() {
       console.error(error)
     }
   }
-  
+
   const loadPost = useCallback(async () => {
     try {
       const postData = await getPostByPostId(postId)
@@ -106,31 +108,20 @@ function PostPage() {
     if (postId) loadPost()
   }, [postId, loadPost])
 
-  if (action === 'write') 
-
-  return (
-    <div>
-      <PostForm  onSubmit={handleCreatePost}/>
-      {isOpen && 
-        (<ProgressBar value={progress} title={progressTitle}/>)
-      }
-    </div>
-  ) 
+  if (action === 'write')
+    return (
+      <div>
+        <PostForm onSubmit={handleCreatePost} />
+        {isOpen && <ProgressBar value={progress} title={progressTitle} />}
+      </div>
+    )
   else if (action === 'edit' && post)
-  return (
-    <div>
-      <PostForm
-        onSubmit={handleUpdatePost}
-        isEdit
-        postData={post} 
-      />
-      {isOpen && 
-        (<ProgressBar value={progress} title={progressTitle}/>)
-      }
-    </div>
-  ) 
+    return (
+      <div>
+        <PostForm onSubmit={handleUpdatePost} isEdit postData={post} />
+        {isOpen && <ProgressBar value={progress} title={progressTitle} />}
+      </div>
+    )
 }
 
 export default PostPage
-
-
