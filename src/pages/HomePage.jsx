@@ -21,6 +21,7 @@ function HomePage() {
   useEffect(() => {
     console.dir(posts)
   }, [posts])
+
   return (
     <div>
       <h3>HomePage</h3>

@@ -45,7 +45,7 @@ function Header() {
         TRAVELOG
       </span>
       <nav style={{ paddingLeft: '20px' }}>
-        {auth.currentUser === null ? (
+        {sessionStorage.getItem(`firebase:authUser:${process.env.REACT_APP_FIREBASE_API_KEY}:[DEFAULT]`) === null ? (
           <div>
             <Link to='/SignUpPage'>회원가입</Link>
             <Link to='/SignInPage'>로그인</Link>

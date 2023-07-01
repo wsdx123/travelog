@@ -2,36 +2,34 @@ import { storage } from 'fb/storage'
 import { db } from 'firebase.js'
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import * as S from 'components/MyPage.styled.js'
 import UpdateProfile from 'components/UpdateProfile'
 import Profile from 'components/Profile'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import PostCards from 'components/PostCards'
 
 function MyPage() {
-  const [userName, setUserName] = useState('')
-  const [userIntro, setUserIntro] = useState('')
-  const [userPlaces, setUserPlaces] = useState('')
-  const [preview, setPreview] = useState(null)
-  const [posts, setPosts] = useState(true)
-  const [tmp, setTmp] = useState([])
-
-  const [imgFile, setImgFile] = useState(null)
-  const [userInfo, setUserInfo] = useState({})
   const [userUpdate, setUserUpdate] = useState(false)
+  const [postsTab, setPostsTab] = useState(true)
+  const [userInfo, setUserInfo] = useState({})
+  const [myPosts, setMyPosts] = useState([])
 
+  const [preview, setPreview] = useState(null)
+  const [imgFile, setImgFile] = useState(null)
+
+  const navigate = useNavigate()
   const params = useParams()
 
   const handleInput = (e) => {
     const { value, name } = e.target
     if (name === 'name') {
-      setUserName(value)
+      setUserInfo({ ...userInfo, name: value })
     } else if (name === 'intro') {
-      setUserIntro(value)
+      setUserInfo({ ...userInfo, intro: value })
     } else if (name === 'places') {
-      setUserPlaces(value)
+      setUserInfo({ ...userInfo, places: value })
     }
   }
 
@@ -41,15 +39,18 @@ function MyPage() {
     setImgFile(file)
     setPreview(image)
   }
-  const handlePreview = () => {
+
+  const handleDeleteImage = () => {
     setPreview(null)
     setImgFile(null)
   }
 
+  // 마이페이지 유저 프로필 업데이트 함수
   const handleUpload = async () => {
-    const infoRef = doc(db, 'users', userInfo.id)
+    const { name, intro, places, id } = userInfo
+    const infoRef = doc(db, 'users', id)
     if (imgFile === null) {
-      const newInfo = { ...userInfo, name: userName, intro: userIntro, places: userPlaces, profile: '' }
+      const newInfo = { ...userInfo, name, intro, places, profile: '' }
       await updateDoc(infoRef, newInfo)
       setUserInfo(newInfo)
     } else {
@@ -58,7 +59,7 @@ function MyPage() {
 
       const downloadURL = await getDownloadURL(imageRef)
 
-      const newInfo = { ...userInfo, name: userName, intro: userIntro, places: userPlaces, profile: downloadURL }
+      const newInfo = { ...userInfo, name, intro, places, profile: downloadURL }
 
       await updateDoc(infoRef, newInfo)
       setUserInfo(newInfo)
@@ -67,54 +68,62 @@ function MyPage() {
   }
 
   const handleMyPosts = () => {
-    setPosts(true)
+    setPostsTab(true)
   }
   const handleLikePosts = () => {
-    setPosts(false)
+    setPostsTab(false)
   }
+  const session = useMemo(() => {
+    return JSON.parse(sessionStorage.getItem(`firebase:authUser:${process.env.REACT_APP_FIREBASE_API_KEY}:[DEFAULT]`))
+  }, [])
 
   useEffect(() => {
+    if (!session || session.uid !== params.myId) {
+      alert('잘못된 접근입니다.')
+      navigate('/')
+    }
     const fetchData = async () => {
       const q = query(collection(db, 'users'), where('id', '==', params.myId))
       const snapShot = await getDocs(q)
       snapShot.forEach((doc) => {
         setUserInfo(doc.data())
-        setUserName(doc.data().name)
-        setUserIntro(doc.data().intro)
-        setUserPlaces(doc.data().places)
         setPreview(doc.data().profile)
       })
     }
     fetchData()
-  }, [params.myId])
+  }, [navigate, params.myId, session])
 
+  // console.log(userInfo)
+
+  // myPage 작성한 게시물, 좋아요한 게시물 모아보는 탭 불러오기
   useEffect(() => {
-    const fetchPosts = async () => {
-      if (posts) {
+    const fetchPostsTab = async () => {
+      if (postsTab) {
         const q = query(collection(db, 'posts'), where('uid', '==', params.myId))
         const snapShot = await getDocs(q)
         snapShot.forEach((doc) => {
-          setTmp((prev) => [...prev, doc.data()])
+          setMyPosts((prev) => [...prev, doc.data()])
         })
       } else {
-        const temp = []
+        const likedPostIdList = []
         const q = query(collection(db, 'likes'), where('likedList', 'array-contains', params.myId))
         const snapShot = await getDocs(q)
         snapShot.forEach((doc) => {
-          temp.push(doc.id)
+          likedPostIdList.push(doc.id)
         })
 
-        const q1 = query(collection(db, 'posts'), where('postId', 'in', temp))
-        const snapshot1 = await getDocs(q1)
-        snapshot1.forEach((doc) => {
-          setTmp((prev) => [...prev, doc.data()])
+        const q1 = query(collection(db, 'posts'), where('postId', 'in', likedPostIdList))
+        const snapShot1 = await getDocs(q1)
+        snapShot1.forEach((doc) => {
+          setMyPosts((prev) => [...prev, doc.data()])
         })
       }
     }
-    setTmp([])
-    fetchPosts()
-  }, [params.myId, posts])
-  console.log(tmp)
+    setMyPosts([])
+    fetchPostsTab()
+  }, [params.myId, postsTab])
+  console.log(myPosts)
+  console.log(session)
 
   return (
     <S.MyPageContainer>
@@ -123,10 +132,8 @@ function MyPage() {
         <UpdateProfile
           handleInput={handleInput}
           handleImgSelect={handleImgSelect}
-          handlePreview={handlePreview}
-          userName={userName}
-          userIntro={userIntro}
-          userPlaces={userPlaces}
+          handleDeleteImage={handleDeleteImage}
+          userInfo={userInfo}
           preview={preview}
           setUserUpdate={setUserUpdate}
           handleUpload={handleUpload}
@@ -145,7 +152,7 @@ function MyPage() {
           </button>
         </S.PostBtnContainer>
         <S.CardContainer>
-          {tmp.map((el) => (
+          {myPosts.map((el) => (
             <PostCards key={`PostCards_${el.postId}`} data={el} />
           ))}
         </S.CardContainer>

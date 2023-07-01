@@ -1,3 +1,4 @@
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import firebaseApp from '../firebase'
 import {
   collection,
@@ -11,6 +12,7 @@ import {
   deleteDoc,
   orderBy,
 } from 'firebase/firestore'
+import { storage } from './storage'
 
 const db = getFirestore(firebaseApp)
 
