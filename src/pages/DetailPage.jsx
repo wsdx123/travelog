@@ -103,12 +103,19 @@ function DetailPage() {
     <>
       <p>Detail Page</p>
       <div style={{ margin: '20px' }}>
-        <p>이미지: {post.imgeUrl}</p>
+        <p>
+          이미지:
+          <div>
+            <img alt='postedImage' src={post.imageUrl} style={{ width: '200px' }} />
+          </div>
+        </p>
         <p>언제: {post.period}</p>
         <p>어디로: {post.destination}</p>
         <p>누구와: {post.partner}</p>
         <p>후기: {post.content}</p>
         <p>isLiked: {post.isLiked.toString()}</p>
+        <button onClick={updatePost}>수정</button>
+        <button onClick={deletePost}>삭제</button>
       </div>
 
       <form onSubmit={handleComments}>
@@ -116,7 +123,9 @@ function DetailPage() {
           ref={addInputRef}
           type='text'
           placeholder='comments를 남겨주세요.'
+
           value={input}
+
           onChange={(e) => {
             setInput(e.target.value)
           }}

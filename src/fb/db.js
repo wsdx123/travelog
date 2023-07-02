@@ -56,3 +56,22 @@ export const getPostsAll = async () => {
   })
   return posts
 }
+
+// 좋아요 상태값 바꾸기
+const initialState = []
+
+export const switchHeart = async (state = initialState, action) => {
+  switch (action.type) {
+    case 'ISLIKED_POST':
+      return state.map((post) => {
+        if (post.postId === action.payload) {
+          return { ...post, isLiked: !post.isLiked }
+        } else {
+          return post
+        }
+      })
+
+    default:
+      return state
+  }
+}
