@@ -96,6 +96,7 @@ const StyledContainer = styled.div`
 `
 
 const SelectButton = styled.button`
+  height: auto;
   box-sizing: border-box;
   text-align: left;
   width: 100%;

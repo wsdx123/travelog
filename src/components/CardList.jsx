@@ -33,13 +33,6 @@ function CardList({ posts }) {
   //   console.log('length: ', posts.length)
   // }, [posts])
 
-  // style components
-  const StPostList = styled.div`
-    display: inline-block;
-    width: 100%;
-    text-align: left;
-  `
-
   console.log(posts)
   console.log(posts.length)
 
@@ -55,3 +48,11 @@ function CardList({ posts }) {
 }
 
 export default CardList
+
+// style components
+const StPostList = styled.div`
+  display: inline-block;
+  width: 100%;
+
+  text-align: left;
+`

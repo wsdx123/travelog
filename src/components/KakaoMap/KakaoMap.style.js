@@ -76,6 +76,9 @@ export const StyledInput = styled.input`
 `
 
 export const StyledButton = styled.button`
+  width: auto;
+  height: auto;
+  margin: 0;
   background-color: #0099ff;
   color: #fff;
   border: none;
@@ -85,6 +88,11 @@ export const StyledButton = styled.button`
   cursor: pointer;
 `
 
+export const TabMenuContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
 export const TabMenu = styled.div`
   margin: 10px 0;
   border: 1px solid #0099ff;
@@ -92,7 +100,11 @@ export const TabMenu = styled.div`
 `
 
 export const TabMenuItem = styled.button`
+  margin: 0;
+  width: auto;
+  height: auto;
   background-color: #fff;
+  border-radius: 0;
   border: none;
   color: #0099ff;
   font-size: 16px;

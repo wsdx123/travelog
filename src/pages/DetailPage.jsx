@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 
 import { useRef } from 'react'
 import { deletePost, getPostByPostId, updatePost } from 'fb/db'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { auth } from 'firebase.js'
 import { v4 } from 'uuid'
 import { deletePostWithData } from '../fb/db'
@@ -122,7 +122,8 @@ function DetailPage() {
       <div>
         <img className='inner-img' alt='postedImage' src={post.imageUrl} />
         <div className='inner-buttons'>
-          <button onClick={updatePost}>수정</button>
+          <Link to={`/postPage?action=edit&postId=${post.postId}`}>수정하기</Link>
+          {/* <button onClick={updatePost}>수정</button> */}
           <button onClick={handleDeletePost}>삭제</button>
         </div>
         <div className='inner-context'>

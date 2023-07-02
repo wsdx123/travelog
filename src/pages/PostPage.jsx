@@ -101,7 +101,7 @@ function PostPage() {
     try {
       const postData = await getPostByPostId(postId)
       console.log(postData)
-      if (!postData || auth.currentUser.uid !== postData?.uid) redirect('/')
+      if (!postData || auth.currentUser.uid !== postData?.uid) navigate('/')
       else {
         setPost(postData)
       }
@@ -111,7 +111,7 @@ function PostPage() {
   }, [postId])
 
   useEffect(() => {
-    if (!auth.currentUser?.uid) redirect('/')
+    if (!auth.currentUser?.uid) navigate('/')
     if (postId) {
       loadPost().then(() => setLoaded(true))
     } else setLoaded(true)
@@ -131,3 +131,4 @@ function PostPage() {
 }
 
 export default PostPage
+

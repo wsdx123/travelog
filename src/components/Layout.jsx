@@ -4,6 +4,7 @@ import { auth } from 'firebase.js'
 import React from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
+import { styled } from 'styled-components'
 
 import { styled } from 'styled-components'
 
@@ -72,12 +73,13 @@ function Layout({ children }) {
   return (
     <div>
       <Header />
-      <div style={{ ...layoutStyles }}>{children}</div>
+      <MainContainer style={{ ...layoutStyles }}>{children}</MainContainer>
     </div>
   )
 }
 
 export default Layout
+
 
 // style components
 const StTitleText = styled.p`
@@ -118,3 +120,8 @@ const navBtn = {
   display: 'grid',
   alignItems: 'center',
 }
+
+const MainContainer = styled.div`
+  height: calc(100vh - 140px);
+`
+

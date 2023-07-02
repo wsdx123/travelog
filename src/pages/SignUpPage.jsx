@@ -4,12 +4,14 @@ import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
+import { LoginInput } from './SignInPage'
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
 `
 
 export const Title = styled.h1`
@@ -21,8 +23,13 @@ export const Title = styled.h1`
 export const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* justify-content: center; */
+  align-items: center;
   margin-bottom: 20px;
+
+  button {
+    margin-top: 10px;
+  }
 `
 
 const EMAIL_REG = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
@@ -87,8 +94,15 @@ function SignUpPage() {
     <Container>
       <Title>회원가입</Title>
       <FormContainer onSubmit={handleSignUp}>
-        <input type='text' name='signUpEmail' value={email} onChange={handleOnChange} placeholder='Email' required />
-        <input
+        <LoginInput
+          type='text'
+          name='signUpEmail'
+          value={email}
+          onChange={handleOnChange}
+          placeholder='Email'
+          required
+        />
+        <LoginInput
           type='password'
           name='signUpPassword'
           value={password}
@@ -96,8 +110,8 @@ function SignUpPage() {
           placeholder='비밀번호'
           required
         />
-        <span>영문/숫자 조합(8~25자)</span>
-        <input
+
+        <LoginInput
           type='password'
           name='signUpVerifyPw'
           value={verifyPw}

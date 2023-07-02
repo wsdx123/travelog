@@ -5,11 +5,13 @@ export const MyPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 10px;
+  height: calc(100vh - 140px);
 
   h1 {
-    font-size: xx-large;
-    font-weight: 800;
-    margin: 20px;
+    color: #707070;
+    font-size: 30px;
+    font-weight: 500;
+    margin: 100px 0 50px 0;
   }
 `
 export const ProfileContainer = styled.div`
@@ -17,7 +19,7 @@ export const ProfileContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 `
 
 export const ProfilePicContainer = styled.div`
@@ -25,7 +27,7 @@ export const ProfilePicContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
+  border: 1px solid #707070;
   border-radius: 50%;
   width: 300px;
   height: 300px;
@@ -41,22 +43,38 @@ export const ProfileInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid red;
-  width: calc(100% - 20px);
+  /* border: 1px solid red; */
+  width: 600px;
   padding: 10px;
+  margin-top: 50px;
+
   div {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
     label {
       min-width: 100px;
     }
     input {
       width: 100%;
+      border: 1px solid #707070;
+      padding: 7px 0px 7px 10px;
+      border-radius: 20px;
+      background-color: white;
+      /* color: #707070; */
     }
-    display: flex;
-    margin-bottom: 10px;
-    align-items: center;
   }
   span {
     margin-bottom: 10px;
+    border: 1px solid #707070;
+    padding: 7px 0px 7px 10px;
+    border-radius: 20px;
+    background-color: white;
+    color: #707070;
+
+    strong {
+      font-weight: 600;
+    }
   }
 `
 
@@ -65,6 +83,7 @@ export const ProfileBtnContainer = styled.div`
   width: calc(100% - 20px);
   margin: 10px;
   justify-content: end;
+  margin-bottom: 50px;
   button {
     margin-left: 10px;
   }
@@ -74,15 +93,19 @@ export const PostContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   width: 100%;
 `
 
 export const PostBtnContainer = styled.div`
   display: flex;
   margin: 10px;
-  justify-content: space-evenly;
+  justify-content: center;
   width: 100%;
+
+  button {
+    margin: 0 10px 0 10px;
+  }
 `
 
 export const CardContainer = styled.div`
@@ -91,8 +114,8 @@ export const CardContainer = styled.div`
 `
 
 export const CardItem = styled.div`
-  width: 80px;
-  height: 80px;
+  width: 150px;
+  height: 150px;
   margin: 10px;
   /* border: 1px solid green; */
   cursor: pointer;
