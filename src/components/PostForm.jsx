@@ -1,54 +1,53 @@
-import { FloppyDisk, TrashSimple } from "@phosphor-icons/react"
-import { deletePost } from "fb/db"
-import { deleteImage,  } from "fb/storage"
-import { useState, memo } from "react"
-import { useNavigate } from "react-router-dom"
-import { styled } from "styled-components"
-import Button from "./Button"
-import TextArea from "./TextArea"
-import SelectItem from "./SelectItem"
-import Select from "./Select"
-import InputText from "./InputText"
-import UploadFileArea from "./UploadFileArea"
-import Modal from "./Modal"
-import { KakaoMap } from "./KakaoMap"
-function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
+import { FloppyDisk, TrashSimple } from '@phosphor-icons/react'
+import { useState, memo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { styled } from 'styled-components'
+import Button from './Button'
+import TextArea from './TextArea'
+import SelectItem from './SelectItem'
+import Select from './Select'
+import InputText from './InputText'
+import UploadFileArea from './UploadFileArea'
+import Modal from './Modal'
+import { KakaoMap } from './KakaoMap'
+import { deletePostWithData } from '../fb/db'
+function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
   const [postData, setPostData] = useState({
     destination: '',
     period: '',
     partner: '',
     content: '',
-    ...initialPostData
+    ...initialPostData,
   })
-  const [locationData,setLocationData] = useState({
-    name : initialPostData?.locationData.name || '', 
-    longitude :initialPostData?.locationData.longitude || 0, 
-    latitude :initialPostData?.locationData.latitude || 0
+  const [locationData, setLocationData] = useState({
+    name: initialPostData?.locationData.name || '',
+    longitude: initialPostData?.locationData.longitude || 0,
+    latitude: initialPostData?.locationData.latitude || 0,
   })
   const [imageFiles, setImageFile] = useState(null)
   const [isResetImage, setResetImage] = useState(false)
   const [isOpenLocationModal, setOpenLocationModal] = useState(false)
-  
+
   const navigate = useNavigate()
 
   const handleChangeDestination = (destination) => {
-    setPostData((prev)=>({...prev, destination}))
+    setPostData((prev) => ({ ...prev, destination }))
   }
 
   const handleChangePeriod = (period) => {
-    setPostData((prev)=>({...prev, period}))
+    setPostData((prev) => ({ ...prev, period }))
   }
 
   const handleChangePartner = (partner) => {
-    setPostData((prev)=>({...prev, partner}))
+    setPostData((prev) => ({ ...prev, partner }))
   }
 
   const handleChangeContent = (content) => {
-    setPostData((prev)=>({...prev, content}))
+    setPostData((prev) => ({ ...prev, content }))
   }
 
   const handleDeleteLocation = () => {
-    setLocationData({name:'', longitude:0 ,latitude:0 })
+    setLocationData({ name: '', longitude: 0, latitude: 0 })
   }
 
   const handleCancel = () => {
@@ -73,8 +72,7 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
 
   const handleDeletePost = async () => {
     try {
-      await deletePost(postData.id)
-      await deleteImage(postData.postId)
+      await deletePostWithData(postData.postId)
       navigate('/')
     } catch (error) {
       console.error(error)
@@ -83,12 +81,13 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if(validateForm) onSubmit({
-      ...postData,
-      imageFiles,
-      isResetImage,
-      locationData
-    })
+    if (validateForm)
+      onSubmit({
+        ...postData,
+        imageFiles,
+        isResetImage,
+        locationData,
+      })
   }
 
   return (
@@ -113,14 +112,17 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
             <FormRow>
               <label name='travel_location'>위치: </label>
               <LocationContainer>{locationData?.name}</LocationContainer>
-              {!isEdit && 
-              (locationData.name
-              ? <Button onClick={handleDeleteLocation} variant='outlined'>삭제</Button> 
-              : <Button onClick={()=>setOpenLocationModal(true)}>위치 찾기</Button>)}
-
+              {!isEdit &&
+                (locationData.name ? (
+                  <Button onClick={handleDeleteLocation} variant='outlined'>
+                    삭제
+                  </Button>
+                ) : (
+                  <Button onClick={() => setOpenLocationModal(true)}>위치 찾기</Button>
+                ))}
             </FormRow>
             <FormRow>
-            <label htmlFor='travel_period'>여행 시기: </label>
+              <label htmlFor='travel_period'>여행 시기: </label>
               <Select
                 name='travel_period'
                 title='여행 시기'
@@ -135,7 +137,7 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
               </Select>
             </FormRow>
             <FormRow>
-            <label htmlFor='travel_partner'>여행 구성원: </label>
+              <label htmlFor='travel_partner'>여행 구성원: </label>
               <Select
                 name='travel_partner'
                 title='함께 여행한 사람'
@@ -161,28 +163,23 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
               <Button onClick={handleCancel} variant='outlined'>
                 취소
               </Button>
-              {isEdit && 
-                <Button 
-                  variant='outlined' 
-                  onClick={handleDeletePost} 
-                  icon={<TrashSimple size={20} />}
-                >
+              {isEdit && (
+                <Button variant='outlined' onClick={handleDeletePost} icon={<TrashSimple size={20} />}>
                   글 삭제
                 </Button>
-              }
-              <Button 
-                type="submit" 
-                icon={<FloppyDisk size={20} />}
-              >
+              )}
+              <Button type='submit' icon={<FloppyDisk size={20} />}>
                 {isEdit ? '글 수정' : '글 쓰기'}
               </Button>
             </FormRow>
           </FormMenu>
         </FormInner>
       </form>
-      {isOpenLocationModal && <Modal title="위치 선택" closeFunc={() => setOpenLocationModal(false)}>
-        <KakaoMap onChange={setLocationData} />
-      </Modal>}
+      {isOpenLocationModal && (
+        <Modal title='위치 선택' closeFunc={() => setOpenLocationModal(false)}>
+          <KakaoMap onChange={setLocationData} />
+        </Modal>
+      )}
     </>
   )
 }

@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { redirect, useNavigate } from 'react-router-dom'
 import PostForm from 'components/PostForm'
 import { v4 } from 'uuid'
-import { deleteImage, uploadImage } from 'fb/storage'
+import { deleteImagesByPostId, uploadImage } from 'fb/storage'
 import ProgressBar from 'components/ProgressBar'
 
 import { auth, db } from 'firebase.js'
@@ -78,7 +78,7 @@ function PostPage() {
     try {
       if (isResetImage || imageFiles) {
         setProgressTitle('기존 이미지 삭제 중')
-        await deleteImage(postId)
+        await deleteImagesByPostId(postId)
       }
       const imageUrl = isResetImage ? '' : imageFiles ? await uploadImages(postId, imageFiles) : post.imageUrl
       setProgressTitle('글 업데이트 중')
@@ -101,14 +101,17 @@ function PostPage() {
     try {
       const postData = await getPostByPostId(postId)
       console.log(postData)
-      if (postData) setPost(postData)
-      else redirect('/')
+      if (!postData || auth.currentUser.uid !== postData?.uid) redirect('/')
+      else {
+        setPost(postData)
+      }
     } catch (error) {
       console.error(error)
     }
   }, [postId])
 
   useEffect(() => {
+    if (!auth.currentUser?.uid) redirect('/')
     if (postId) {
       loadPost().then(() => setLoaded(true))
     } else setLoaded(true)

@@ -1,12 +1,13 @@
 import React from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux/es/hooks/useSelector'
+
 import { useRef } from 'react'
 import { deletePost, getPostByPostId, updatePost } from 'fb/db'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { auth } from 'firebase.js'
 import { v4 } from 'uuid'
+import { deletePostWithData } from '../fb/db'
 
 function DetailPage() {
   const [post, setPost] = useState(null)
@@ -14,10 +15,6 @@ function DetailPage() {
 
   const navigate = useNavigate()
 
-  const dispatch = useDispatch()
-  // const comments = useSelector((state) => {
-  //   return state.details // comments -> details
-  // })
   const [input, setInput] = useState('')
   const [comments, setComments] = useState([])
   const [editComment, setEditComment] = useState('')
@@ -28,10 +25,7 @@ function DetailPage() {
 
   const handleComments = async (e) => {
     e.preventDefault()
-    // dispatch({
-    //   type: 'ADD_COMMENTS',
-    //   payload: comment,
-    // })
+
     setInput('')
 
     try {
@@ -46,7 +40,26 @@ function DetailPage() {
     // addInputRef.current.focus()
   }
 
-  const handleCommentsDelete = async (id) => {
+  const handleDeletePost = async () => {
+    if (auth.currentUser.uid !== post.uid) return
+    try {
+      await deletePostWithData(post.postId)
+      navigate('/')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const verifyCommentsUpdate = (id, uid) => {
+    if (auth.currentUser.uid === uid) {
+      setIsEdit(id)
+    } else {
+      alert('권한이 없습니다')
+    }
+  }
+
+  const handleCommentsDelete = async (id, uid) => {
+    if (auth.currentUser.uid !== uid) return alert('권한이없습니다')
     try {
       const tmp = post.comments.filter((el) => el.id !== id)
       await updatePost(post.id, { comments: tmp })
@@ -59,7 +72,7 @@ function DetailPage() {
   const handleCommentsUpdate = async (id, e) => {
     e.preventDefault()
     try {
-      const tmp = post.comments.map((el) => (el.id === id ? { ...el, text: editComment } : el))
+      const tmp = comments.map((el) => (el.id === id ? { ...el, text: editComment } : el))
       console.log(tmp)
       await updatePost(post.id, { comments: tmp })
       setComments(tmp)
@@ -114,7 +127,7 @@ function DetailPage() {
         <p>누구와: {post.partner}</p>
         <p>후기: {post.content}</p>
         <button onClick={updatePost}>수정</button>
-        <button onClick={deletePost}>삭제</button>
+        <button onClick={handleDeletePost}>삭제</button>
       </div>
 
       <form onSubmit={handleComments}>
@@ -133,10 +146,13 @@ function DetailPage() {
         {comments.map((comment) => {
           return (
             <div key={`comments_ID_${comment.id}`}>
-              {comment.text}
-              <button onClick={() => setIsEdit(comment.id)}>수정</button>
+              <div>
+                <p>ID: {comment.uid} |</p>
+                <p>{comment.text}</p>
+              </div>
+              <button onClick={() => verifyCommentsUpdate(comment.id, comment.uid)}>수정</button>
 
-              <button onClick={() => handleCommentsDelete(comment.id)}>삭제</button>
+              <button onClick={() => handleCommentsDelete(comment.id, comment.uid)}>삭제</button>
               {isEdit === comment.id ? (
                 <form onSubmit={(e) => handleCommentsUpdate(comment.id, e)}>
                   <input type='text' value={editComment} onChange={(e) => setEditComment(e.target.value)} />

@@ -31,11 +31,20 @@ function CardList() {
     fetchData()
   }, [])
 
+  // style components
+  const StPostList = {
+    width: '100%',
+    maxWidth: '100%',
+    height: '250px',
+    display: 'flex',
+    paddingLeft: '20px',
+    borderSizing: 'border-box',
+  }
+
   console.log(posts)
   return (
-    <div>
+    <div style={{ ...StPostList }}>
       {posts.map((post) => {
-        // 불리안 값으로 좋아요 하트 상태 변경
         return <CardItem key={`cardKey__${post.postId}`} post={post} />
       })}
     </div>

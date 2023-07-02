@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 function CardItem({ post }) {
   const dispatch = useDispatch()
   const [heart, setHeart] = useState(false)
+  const [totalHeart, setTotalHeart] = useState(0)
 
   const handleHeart = async (e) => {
     setHeart((prev) => !prev)
@@ -31,6 +32,8 @@ function CardItem({ post }) {
     if (!auth.currentUser) return
     const fetchHeart = async () => {
       const snapShot = await getDoc(doc(db, 'likes', post.postId))
+      console.log(typeof snapShot.data().length)
+      setTotalHeart(snapShot.data().length)
       if (snapShot.data().likedList.includes(auth.currentUser.uid)) {
         setHeart(true)
       }
@@ -38,20 +41,27 @@ function CardItem({ post }) {
     fetchHeart()
   }, [post.postId])
 
+  // style components
+
+  const StPostCard = {
+    width: '100%',
+    maxWidth: '100%',
+  }
+
   return (
-    <div
-      style={{
-        padding: '10px',
-        margin: '10px',
-        float: 'column',
-      }}
-      key={post.postId}
-    >
-      {post.postId} | <img src={post.imageUrl} style={{ width: '100px' }} /> | {post.destinaion} | {post.period} |{' '}
-      {post.partner} | {post.content}|
+    <div style={{ ...StPostCard }} key={post.postId}>
+      <div>
+        <img alt='imgPosted' src={post.imageUrl} style={{ width: '100px' }} />
+      </div>
+      <p>좋아요 {totalHeart}개</p>
+      <ul>
+        <li>{post.destinaion}</li>
+        <li>{post.period}</li>
+        <li>{post.partner}</li>
+        <li>{post.content}</li>
+      </ul>
       <div>
         <button>
-          {/* dropdown 수정, 삭제 버튼 만들기 */}
           <Link to={`/postPage/${post.postId}`}>EDIT</Link>
         </button>
       </div>
@@ -67,17 +77,7 @@ function CardItem({ post }) {
           DELETE
         </button>
       </div>
-      {/* <button
-    onClick={() => {
-      dispatch({
-        type: 'ISLIKED_POST',
-        payload: post.postId,
-      })
-    }}
-  > */}
       <button onClick={handleHeart}>{heart ? 'heart filled' : 'heart empty'}</button>
-      {/* <button onClick={delPost}>DELETE</button>
-  <button onClick={islikedPost}>{heart}</button> */}
     </div>
   )
 }

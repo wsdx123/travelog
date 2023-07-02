@@ -11,6 +11,7 @@ import {
   deleteDoc,
   orderBy,
 } from 'firebase/firestore'
+import { deleteImagesByPostId } from './storage'
 
 const db = getFirestore(firebaseApp)
 
@@ -28,10 +29,36 @@ export const updatePost = async (id, updatedPost) => {
   return await updateDoc(postRef, updatedPost)
 }
 
+export const deletePostWithData = async (postId) => {
+  console.log('delete: ', postId)
+  const postData = await getPostByPostId(postId)
+  if (!postData) throw new Error('게시글을 찾을 수 없습니다')
+  try {
+    await deletePostDoc(postData.id)
+  } catch (error) {
+    throw new Error('게시글 삭제에 실패했습니다.')
+  }
+  try {
+    await deleteImagesByPostId(postData.postId)
+  } catch (error) {
+    throw new Error('이미지 삭제에 실패했습니다.')
+  }
+  try {
+    await deleteLikedListDoc(postData.postId)
+  } catch (error) {
+    throw new Error('좋아요 리스트 삭제에 실패했습니다.')
+  }
+}
+
 //게시물 삭제하기
-export const deletePost = async (id) => {
+const deletePostDoc = async (id) => {
   const postRef = doc(db, 'posts', id)
   return await deleteDoc(postRef)
+}
+//좋아요 목록 삭제
+const deleteLikedListDoc = async (id) => {
+  const likedListRef = doc(db, 'likes', id)
+  return await deleteDoc(likedListRef)
 }
 
 //postId값과 일치하는 게시물 한개 가져오기

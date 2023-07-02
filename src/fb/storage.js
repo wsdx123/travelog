@@ -55,7 +55,7 @@ export const uploadImages = async (postId, files) => {
   return downloadUrls
 }
 
-export const deleteImage = async (postId) => await deleteFolder(`images/posts/${postId}`)
+export const deleteImagesByPostId = async (postId) => await deleteFolder(`images/posts/${postId}`)
 
 const deleteFile = async (path) => {
   const deleteItemRef = ref(storage, path)
