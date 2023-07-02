@@ -90,7 +90,9 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
   }
 
   return (
+
     <FormContainer>
+
       <form onSubmit={handleSubmit}>
         <FormInner>
           <UploadFileArea
@@ -185,7 +187,9 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
           <KakaoMap onChange={setLocationData} />
         </Modal>
       )}
+
     </FormContainer>
+
   )
 }
 
@@ -222,4 +226,7 @@ const FormInner = styled.div`
 const LocationContainer = styled.div`
   word-break: keep-all;
   max-width: 200px;
+`
+const Container = styled.div`
+  height: calc(100vh - 140px);
 `
