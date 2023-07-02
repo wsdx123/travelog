@@ -64,13 +64,12 @@ const SearchForm = ({ filterData }) => {
     width: '100%',
     textAlign: 'center',
     margin: '0 auto',
-    marginTop: '20px',
+    marginTop: '160px', //layout fixed 후
     marginBottom: '20px',
   }
 
   return (
     <div style={{ ...StSearchSection }}>
-      {/* <input type='text' autofocus='autofocus' /> */}
       <Select
         name='travel_period'
         title='여행 시기'
@@ -97,7 +96,9 @@ const SearchForm = ({ filterData }) => {
           </SelectItem>
         ))}
       </Select>
-      <button onClick={handleSearch}>SEARCH</button>
+      <button style={{ marginLeft: '15px', padding: '5px' }} onClick={handleSearch}>
+        SEARCH
+      </button>
     </div>
   )
 }
