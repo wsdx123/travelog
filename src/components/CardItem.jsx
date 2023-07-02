@@ -1,45 +1,44 @@
+import { heartHandler } from 'fb/db'
 import { auth, db } from 'firebase.js'
 import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function CardItem({ post }) {
   const dispatch = useDispatch()
   const [heart, setHeart] = useState(false)
   const [totalHeart, setTotalHeart] = useState(0)
+  const navigate = useNavigate()
 
   const handleHeart = async (e) => {
+    if (!auth.currentUser) {
+      alert('로그인 후 이용바랍니다.')
+      return navigate('/SignInPage')
+    }
     setHeart((prev) => !prev)
-
     try {
-      if (!heart) {
-        const heartRef = doc(db, 'likes', post.postId)
-        await updateDoc(heartRef, {
-          likedList: arrayUnion(auth.currentUser.uid),
-        })
-      } else {
-        const heartRef = doc(db, 'likes', post.postId)
-        await updateDoc(heartRef, {
-          likedList: arrayRemove(auth.currentUser.uid),
-        })
-      }
+      await heartHandler(heart, post.postId)
     } catch (error) {
       console.error(error.code)
     }
   }
   useEffect(() => {
-    if (!auth.currentUser) return
     const fetchHeart = async () => {
       const snapShot = await getDoc(doc(db, 'likes', post.postId))
-      console.log(typeof snapShot.data().length)
-      setTotalHeart(snapShot.data().length)
-      if (snapShot.data().likedList.includes(auth.currentUser.uid)) {
-        setHeart(true)
+
+      if (!auth.currentUser) {
+        setTotalHeart(snapShot.data().likedList.length)
+      } else {
+        setTotalHeart(snapShot.data().likedList.length)
+        if (snapShot.data().likedList.includes(auth.currentUser.uid)) {
+          setHeart(true)
+        }
       }
     }
     fetchHeart()
-  }, [post.postId])
+  }, [post, heart])
+  console.log(post)
 
   // style components
 

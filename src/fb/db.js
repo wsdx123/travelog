@@ -1,4 +1,4 @@
-import firebaseApp from '../firebase'
+import firebaseApp, { auth } from '../firebase'
 import {
   collection,
   addDoc,
@@ -10,6 +10,8 @@ import {
   updateDoc,
   deleteDoc,
   orderBy,
+  arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore'
 import { deleteImagesByPostId } from './storage'
 
@@ -75,7 +77,7 @@ export const getPostByPostId = async (postId) => {
 //만든 날짜 내림차순(최신순)으로 모든 게시물 가져오기
 export const getPostsAll = async () => {
   const postsRef = collection(db, 'posts')
-  const q = query(postsRef, orderBy('created_at', 'desc'))
+  const q = query(postsRef, orderBy('createdAt', 'desc'))
   const querySnapshot = await getDocs(q)
   const posts = []
   querySnapshot.forEach((doc) => {
@@ -100,5 +102,19 @@ export const switchHeart = async (state = initialState, action) => {
 
     default:
       return state
+  }
+}
+
+export const heartHandler = async (heart, postId) => {
+  if (!heart) {
+    const heartRef = doc(db, 'likes', postId)
+    await updateDoc(heartRef, {
+      likedList: arrayUnion(auth.currentUser.uid),
+    })
+  } else {
+    const heartRef = doc(db, 'likes', postId)
+    await updateDoc(heartRef, {
+      likedList: arrayRemove(auth.currentUser.uid),
+    })
   }
 }
