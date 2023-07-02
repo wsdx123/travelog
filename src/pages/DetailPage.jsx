@@ -9,6 +9,8 @@ import { auth } from 'firebase.js'
 import { v4 } from 'uuid'
 import { deletePostWithData } from '../fb/db'
 
+import { styled } from 'styled-components'
+
 function DetailPage() {
   const [post, setPost] = useState(null)
   const { postId } = useParams()
@@ -112,102 +114,102 @@ function DetailPage() {
 
   console.log(comments)
 
+  // style components
+  const StDetailPage = styled.div`
+    width: 50%;
+    justify-content: center;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 30px;
+    font-family: IBM Plex Sans KR;
+
+    .inner-img {
+      width: 100%;
+    }
+
+    .inner-context {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .inner-buttons {
+      text-align: right;
+    }
+
+    .StComments {
+      margin-top: 40px;
+      padding: 50px;
+      border: 1px solid #050505;
+    }
+
+    .inputStyle {
+      width: 70%;
+      height: 25px;
+      margin-bottom: 50px;
+      border-radius: 15px;
+      border: 1px solid #050505;
+      background: #050505;
+      color: white;
+    }
+  `
+
   return (
-    <>
-      <p>Detail Page</p>
-      <div style={{ margin: '20px' }}>
-        <p>
-          이미지:
-          <div>
-            <img alt='postedImage' src={post.imageUrl} style={{ width: '200px' }} />
-          </div>
-        </p>
-        <p>언제: {post.period}</p>
-        <p>어디로: {post.destination}</p>
-        <p>누구와: {post.partner}</p>
-        <p>후기: {post.content}</p>
-        <button onClick={updatePost}>수정</button>
-        <button onClick={handleDeletePost}>삭제</button>
-      </div>
-
-      <form onSubmit={handleComments}>
-        <input
-          ref={addInputRef}
-          type='text'
-          placeholder='comments를 남겨주세요.'
-          value={input}
-          onChange={(e) => {
-            setInput(e.target.value)
-          }}
-        />
-        <button>댓글등록</button>
-      </form>
+    <StDetailPage>
       <div>
-        {comments.map((comment) => {
-          return (
-            <div key={`comments_ID_${comment.id}`}>
-              <div>
-                <p>ID: {comment.uid} |</p>
-                <p>{comment.text}</p>
-              </div>
-              <button onClick={() => verifyCommentsUpdate(comment.id, comment.uid)}>수정</button>
-
-              <button onClick={() => handleCommentsDelete(comment.id, comment.uid)}>삭제</button>
-              {isEdit === comment.id ? (
-                <form onSubmit={(e) => handleCommentsUpdate(comment.id, e)}>
-                  <input type='text' value={editComment} onChange={(e) => setEditComment(e.target.value)} />
-                  <button type='submit'>완료</button>
-                  <button type='button' onClick={() => setIsEdit('')}>
-                    취소
-                  </button>
-                </form>
-              ) : null}
-              {/* <ul>
-                {comment.editMode ? (
-                  <>
-                    <input
-                      value={editComment.comments}
-                      ref={editInputRef}
-                      onChange={(e) => {
-                        setComments(e.target.value)
-                      }}
-                    ></input>
-                    <button>수정완료</button>
-                  </>
-                ) : (
-                  <>
-                    <li>{comment.comments}</li>
-                    <button
-                      onClick={() => {
-                        dispatch({
-                          type: 'EDIT_MODE',
-                          payload: comment,
-                        })
-                        // 이부분 왜 안되는지 모르겠음!!!
-                        // editInputRef.current.focus()
-                      }}
-                    >
-                      수정하기 : {comment.editMode.toString()}
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        dispatch({
-                          type: 'DELETE_COMMENTS',
-                          payload: comment,
-                        })
-                      }}
-                    >
-                      삭제하기
-                    </button>
-                  </>
-                )}
-              </ul> */}
-            </div>
-          )
-        })}
+        <img className='inner-img' alt='postedImage' src={post.imageUrl} />
+        <div className='inner-buttons'>
+          <button onClick={updatePost}>수정</button>
+          <button onClick={handleDeletePost}>삭제</button>
+        </div>
+        <div className='inner-context'>
+          <p>{post.period}</p>
+          <p>{post.destination}</p>
+          <p>{post.partner}</p>
+          <p>"{post.content}"</p>
+        </div>
       </div>
-    </>
+      <div className='StComments'>
+        <p>COMMENTS</p>
+        <form onSubmit={handleComments}>
+          <input
+            className='inputStyle'
+            ref={addInputRef}
+            type='text'
+            placeholder='comments를 남겨주세요.'
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value)
+            }}
+          />
+          <button>댓글등록</button>
+        </form>
+        <div>
+          {comments.map((comment) => {
+            return (
+              <div key={`comments_ID_${comment.id}`}>
+                <div>
+                  <p>ID: {comment.uid} |</p>
+                  {/* ㄴ이거 유저아이디로 변경? */}
+                  <p>{comment.text}</p>
+                </div>
+                <button onClick={() => verifyCommentsUpdate(comment.id, comment.uid)}>수정</button>
+
+                <button onClick={() => handleCommentsDelete(comment.id, comment.uid)}>삭제</button>
+                {isEdit === comment.id ? (
+                  <form onSubmit={(e) => handleCommentsUpdate(comment.id, e)}>
+                    <input type='text' value={editComment} onChange={(e) => setEditComment(e.target.value)} />
+                    <button type='submit'>완료</button>
+                    <button type='button' onClick={() => setIsEdit('')}>
+                      취소
+                    </button>
+                  </form>
+                ) : null}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </StDetailPage>
   )
 }
 

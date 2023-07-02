@@ -13,7 +13,6 @@ function HomePage() {
     getPostsAll().then((postsArray) => setPosts(postsArray))
   }, [])
 
-
   return (
     <div>
       <SearchForm />
