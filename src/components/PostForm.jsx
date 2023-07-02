@@ -20,38 +20,35 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
     content: '',
     ...initialPostData
   })
-  const [imageFiles, setImageFile] = useState(null)
-  // const [destination, setDestination] = useState(isEdit ? postData.destination : '')
-  // const [period, setPeriod] = useState(isEdit ? postData.period : '')
-  // const [partner, setPartner] = useState(isEdit ? postData.partner : '')
-  // const [content, setContent] = useState(isEdit ? postData.content : '')
-  const [isResetImage, setResetImage] = useState(false)
-  const [isOpenLocationModal, setOpenLocationModal] = useState(false)
   const [locationData,setLocationData] = useState({
     name : initialPostData?.locationData.name || '', 
     longitude :initialPostData?.locationData.longitude || 0, 
     latitude :initialPostData?.locationData.latitude || 0
   })
+  const [imageFiles, setImageFile] = useState(null)
+  const [isResetImage, setResetImage] = useState(false)
+  const [isOpenLocationModal, setOpenLocationModal] = useState(false)
+  
   const navigate = useNavigate()
 
   const handleChangeDestination = (destination) => {
-    // setDestination(value)
     setPostData((prev)=>({...prev, destination}))
   }
 
   const handleChangePeriod = (period) => {
-    // setPeriod(value)
     setPostData((prev)=>({...prev, period}))
   }
 
   const handleChangePartner = (partner) => {
-    // setPartner(value)
     setPostData((prev)=>({...prev, partner}))
   }
 
   const handleChangeContent = (content) => {
-    // setContent(value)
     setPostData((prev)=>({...prev, content}))
+  }
+
+  const handleDeleteLocation = () => {
+    setLocationData({name:'', longitude:0 ,latitude:0 })
   }
 
   const handleCancel = () => {
@@ -86,7 +83,6 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(locationData)
     if(validateForm) onSubmit({
       ...postData,
       imageFiles,
@@ -116,8 +112,12 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
             </FormRow>
             <FormRow>
               <label name='travel_location'>위치: </label>
-              <p>{locationData?.name}</p>
-              {!isEdit && <Button onClick={()=>setOpenLocationModal(true)}>위치 찾기</Button>}
+              <LocationContainer>{locationData?.name}</LocationContainer>
+              {!isEdit && 
+              (locationData.name
+              ? <Button onClick={handleDeleteLocation} variant='outlined'>삭제</Button> 
+              : <Button onClick={()=>setOpenLocationModal(true)}>위치 찾기</Button>)}
+
             </FormRow>
             <FormRow>
             <label htmlFor='travel_period'>여행 시기: </label>
@@ -162,13 +162,13 @@ function PostForm({ onSubmit , isEdit, postData: initialPostData }) {
                 취소
               </Button>
               {isEdit && 
-              <Button 
-                variant='outlined' 
-                onClick={handleDeletePost} 
-                icon={<TrashSimple size={20} />}
-              >
-                글 삭제
-              </Button>
+                <Button 
+                  variant='outlined' 
+                  onClick={handleDeletePost} 
+                  icon={<TrashSimple size={20} />}
+                >
+                  글 삭제
+                </Button>
               }
               <Button 
                 type="submit" 
@@ -206,4 +206,9 @@ const FormInner = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+`
+
+const LocationContainer = styled.div`
+  word-break: keep-all;
+  max-width: 200px;
 `
