@@ -32,7 +32,6 @@ export const updatePost = async (id, updatedPost) => {
 }
 
 export const deletePostWithData = async (postId) => {
-  console.log('delete: ', postId)
   const postData = await getPostByPostId(postId)
   if (!postData) throw new Error('게시글을 찾을 수 없습니다')
   try {

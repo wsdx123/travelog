@@ -21,11 +21,11 @@ function HomePage() {
       q = query(collection(db, 'posts'), where('partner', '==', partner), where('period', '==', period))
     }
     const snapshot = await getDocs(q)
-    const tmp = []
+    const filteredData = []
     snapshot.forEach((doc) => {
-      tmp.push({ id: doc.id, ...doc.data() })
+      filteredData.push({ id: doc.id, ...doc.data() })
     })
-    setPosts(tmp)
+    setPosts(filteredData)
   }
 
   useEffect(() => {

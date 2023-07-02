@@ -98,7 +98,6 @@ function PostPage() {
   const loadPost = useCallback(async () => {
     try {
       const postData = await getPostByPostId(postId)
-      console.log(postData)
       if (!postData || auth.currentUser.uid !== postData?.uid) navigate('/')
       else {
         setPost(postData)
@@ -106,14 +105,14 @@ function PostPage() {
     } catch (error) {
       console.error(error)
     }
-  }, [postId])
+  }, [navigate, postId])
 
   useEffect(() => {
     if (!auth.currentUser?.uid) navigate('/')
     if (postId) {
       loadPost().then(() => setLoaded(true))
     } else setLoaded(true)
-  }, [postId, loadPost])
+  }, [postId, loadPost, navigate])
 
   if (!isLoaded) return null
   return (
