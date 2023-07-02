@@ -6,19 +6,25 @@ import PostForm from 'components/PostForm'
 import { v4 } from 'uuid'
 import { deleteImage, uploadImage } from 'fb/storage'
 import ProgressBar from 'components/ProgressBar'
+
 import { auth, db } from 'firebase.js'
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
+
 
 function PostPage() {
+  const [isLoaded,setLoaded] = useState(false)
   const [post, setPost] = useState(null)
   const location = useQuery()
   const action = location.get('action')
   const postId = location.get('postId')
 
   const navigate = useNavigate()
-  const [isOpen, setOpen] = useState(false)
-  const [progressTitle, setProgressTitle] = useState('')
-  const [progress, setProgress] = useState(0)
+
+
+  const [isPosting, setIsPosting] = useState(false)
+  const [progressTitle,setProgressTitle] = useState('')
+  const [progress,setProgress] = useState(0)
+
+
 
   const uploadImages = async (postId, files) => {
     setProgressTitle('이미지 업로드 시작')
@@ -35,12 +41,14 @@ function PostPage() {
 
   const handleCreatePost = async (postData) => {
     const { imageFiles, destination, period, partner, content, locationData } = postData
+
     const uid = auth.currentUser.uid
+
 
     try {
       const postId = v4()
       setProgressTitle('글 저장 시작')
-      setOpen(true)
+      setIsPosting(true)
       const imageUrl = imageFiles ? await uploadImages(postId, imageFiles) : ''
 
       setProgressTitle('글 저장 중')
@@ -54,6 +62,7 @@ function PostPage() {
         imageUrl,
         locationData,
         uid,
+        comments: [],
         isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
@@ -69,7 +78,7 @@ function PostPage() {
 
   const handleUpdatePost = async (postData) => {
     setProgressTitle('업데이트 시작')
-    setOpen(true)
+    setIsPosting(true)
     const { isResetImage, postId, imageFiles, destination, period, partner, content } = postData
     try {
       if (isResetImage || imageFiles) {
@@ -105,21 +114,24 @@ function PostPage() {
   }, [postId])
 
   useEffect(() => {
-    if (postId) loadPost()
+    if (postId) {
+      loadPost().then(()=>setLoaded(true))
+    }
+    else setLoaded(true)
   }, [postId, loadPost])
 
-  if (action === 'write')
+
+
+    if(!isLoaded) return null
     return (
       <div>
-        <PostForm onSubmit={handleCreatePost} />
-        {isOpen && <ProgressBar value={progress} title={progressTitle} />}
-      </div>
-    )
-  else if (action === 'edit' && post)
-    return (
-      <div>
-        <PostForm onSubmit={handleUpdatePost} isEdit postData={post} />
-        {isOpen && <ProgressBar value={progress} title={progressTitle} />}
+        <PostForm  
+          onSubmit={action === 'write' ? handleCreatePost : handleUpdatePost}
+          isEdit={action==='edit'}
+          postData={post}
+        />
+        <ProgressBar value={progress} title={progressTitle} open={isPosting}/>
+
       </div>
     )
 }

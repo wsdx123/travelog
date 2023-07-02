@@ -1,7 +1,9 @@
 import React from 'react'
 import { styled } from 'styled-components'
 
-const ProgressBar = ({ value, title}) => {
+const ProgressBar = ({ value, title, open}) => {
+
+  if(!open) return null
   return (
     <>
       <ProgressBarBg/>
