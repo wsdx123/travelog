@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import Select from './Select'
+import { useState } from 'react'
+
 import SelectItem from './SelectItem'
-import { collection, getDocs, query, where } from 'firebase/firestore'
-import { useDispatch, useSelector } from 'react-redux'
-import { filterPosts, resetState } from 'redux/modules/post'
-import { db } from 'firebase.js'
+import Select from './Select'
 
 const SEASON = [
   { value: 'all', text: '전체' },
@@ -27,11 +24,6 @@ const SearchForm = ({ filterData }) => {
     period: SEASON[0].value,
     partner: TRAVEL_WITH[0].value,
   })
-  const [posts, setPosts] = useState([])
-  const data = useSelector((state) => state.posts)
-  const dispatch = useDispatch()
-
-  console.log(data)
 
   const handleChangePeriod = (period) => {
     setSearh((prev) => ({ ...prev, period }))
@@ -42,22 +34,8 @@ const SearchForm = ({ filterData }) => {
   }
 
   const handleSearch = async () => {
-    // if (search.period === 'all') {
-    //   const tmp = data.filter((el) => el.partner === search.partner)
-    // } else if (search.partner === 'all') {
-    //   const tmp = data.filter((el) => el.period === search.period)
-    // } else if (search.partner === 'all' && search.period === 'all') {
-    //   const tmp = data
-    // } else {
-    //   const tmp = data.filter((el) => el.period === search.period && el.partner === search.partner)
-    // }
     await filterData(search.partner, search.period)
-
-    // dispatch(resetState())
-    // dispatch(filterPosts({ partner: search.partner, period: search.period }))
-    // console.log(tmp)
   }
-  console.log(posts)
 
   // style components
   const StSearchSection = {

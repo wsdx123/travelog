@@ -1,14 +1,12 @@
-import React from 'react'
 import { styled } from 'styled-components'
 
-const ProgressBar = ({ value, title, open}) => {
-
-  if(!open) return null
+const ProgressBar = ({ value, title, open }) => {
+  if (!open) return null
   return (
     <>
-      <ProgressBarBg/>
+      <ProgressBarBg />
       <ProgressBarContainer>
-        <progress max="100" value={`${value}`}>
+        <progress max='100' value={`${value}`}>
           {`${value}%`}
         </progress>
         <h4>{title}</h4>
@@ -42,5 +40,4 @@ const ProgressBarContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   align-items: center;
-
 `

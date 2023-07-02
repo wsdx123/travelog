@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState, Children } from 'react'
-import { styled } from 'styled-components'
+import { useEffect, useRef, useState, Children } from 'react'
 import { CaretDown, CaretUp } from '@phosphor-icons/react'
+import { styled } from 'styled-components'
 
 export default function Select({ name, title = '목록', placeholder, defaultValue, width, onChange, children }) {
   const [isOpen, setOpen] = useState(false)

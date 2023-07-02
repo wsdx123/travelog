@@ -19,7 +19,6 @@ export const ProfileContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* border: 1px solid black; */
 `
 
 export const ProfilePicContainer = styled.div`
@@ -43,7 +42,6 @@ export const ProfileInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* border: 1px solid red; */
   width: 600px;
   padding: 10px;
   margin-top: 50px;
@@ -52,18 +50,20 @@ export const ProfileInfoContainer = styled.div`
     display: flex;
     margin-bottom: 10px;
     align-items: center;
+
     label {
       min-width: 100px;
     }
+
     input {
       width: 100%;
       border: 1px solid #707070;
       padding: 7px 0px 7px 10px;
       border-radius: 20px;
       background-color: white;
-      /* color: #707070; */
     }
   }
+
   span {
     margin-bottom: 10px;
     border: 1px solid #707070;
@@ -84,6 +84,7 @@ export const ProfileBtnContainer = styled.div`
   margin: 10px;
   justify-content: end;
   margin-bottom: 50px;
+
   button {
     margin-left: 10px;
   }
@@ -93,7 +94,6 @@ export const PostContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* border: 1px solid black; */
   width: 100%;
 `
 
@@ -117,7 +117,6 @@ export const CardItem = styled.div`
   width: 150px;
   height: 150px;
   margin: 10px;
-  /* border: 1px solid green; */
   cursor: pointer;
 
   img {
@@ -125,6 +124,7 @@ export const CardItem = styled.div`
     height: 100%;
     object-fit: cover;
     transition: all 0.25s ease-in-out;
+
     &:hover {
       opacity: 0.6;
     }

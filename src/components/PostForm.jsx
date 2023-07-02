@@ -1,15 +1,16 @@
-import { FloppyDisk, TrashSimple } from '@phosphor-icons/react'
-import { useState, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
-import TextArea from './TextArea'
-import SelectItem from './SelectItem'
-import Select from './Select'
-import InputText from './InputText'
+import { useState, memo } from 'react'
+
 import UploadFileArea from './UploadFileArea'
-import Modal from './Modal'
-import { KakaoMap } from './KakaoMap'
 import { deletePostWithData } from '../fb/db'
+import { KakaoMap } from './KakaoMap'
+import SelectItem from './SelectItem'
+import InputText from './InputText'
+import TextArea from './TextArea'
+import Select from './Select'
+import Modal from './Modal'
+
 function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
   const [postData, setPostData] = useState({
     destination: '',
@@ -214,7 +215,4 @@ const FormInner = styled.div`
 const LocationContainer = styled.div`
   word-break: keep-all;
   max-width: 200px;
-`
-const Container = styled.div`
-  height: calc(100vh - 140px);
 `

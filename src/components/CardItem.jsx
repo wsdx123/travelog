@@ -1,13 +1,11 @@
-import { heartHandler } from 'fb/db'
-import { auth, db } from 'firebase.js'
-import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-
-import { styled } from 'styled-components'
-import { HeartIcon } from 'assets/svgs'
-
 import { Link, useNavigate } from 'react-router-dom'
+import { doc, getDoc } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+import { styled } from 'styled-components'
+
+import { HeartIcon } from 'assets/svgs'
+import { auth, db } from 'firebase.js'
+import { heartHandler } from 'fb/db'
 
 export const Season = {
   spring: '봄',
@@ -15,6 +13,7 @@ export const Season = {
   fall: '가을',
   winter: '겨울',
 }
+
 export const TravelWith = {
   couple: '커플',
   family: '가족',
@@ -24,9 +23,9 @@ export const TravelWith = {
 }
 
 function CardItem({ post }) {
-  const dispatch = useDispatch()
-  const [heart, setHeart] = useState(false)
   const [totalHeart, setTotalHeart] = useState(0)
+  const [heart, setHeart] = useState(false)
+
   const navigate = useNavigate()
 
   const handleHeart = async (e) => {
@@ -41,6 +40,7 @@ function CardItem({ post }) {
       console.error(error.code)
     }
   }
+
   useEffect(() => {
     const fetchHeart = async () => {
       const snapShot = await getDoc(doc(db, 'likes', post.postId))
@@ -56,7 +56,6 @@ function CardItem({ post }) {
     }
     fetchHeart()
   }, [post, heart])
-  console.log(post)
 
   return (
     <div key={post.postId}>
@@ -99,7 +98,6 @@ const StPostCard = styled.div`
   height: 500px;
   border: 1px solid black;
   line-height: 30px;
-
   overflow: hidden;
 
   .inner-component-img {

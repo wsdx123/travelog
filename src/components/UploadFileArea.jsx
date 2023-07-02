@@ -1,7 +1,7 @@
-import { isFileSizeOver, sliceFilesMax } from "common"
-import { memo, useMemo, useRef, useState } from "react"
-import { styled } from "styled-components"
-import { Image } from "@phosphor-icons/react"
+import { memo, useMemo, useRef, useState } from 'react'
+import { styled } from 'styled-components'
+
+import { isFileSizeOver, sliceFilesMax } from 'common'
 
 function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
   const [imageFiles, setImageFiles] = useState(null)
@@ -11,7 +11,6 @@ function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
   const handleDragOver = (event) => {
     event.preventDefault()
   }
-
 
   const handleDrop = (event) => {
     event.preventDefault()
@@ -49,45 +48,55 @@ function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
     onChange(null)
   }
 
-  const imageFileList = useMemo(()=>{
-      const imagePreviewArray = [];
-      if(imageFiles) {
-        for(let i = 0; i < imageFiles.length; i++) {
-          imagePreviewArray.push(<ImagePreview key={i} width={100} height={100} alt={imageFiles.item(i).name} src={URL.createObjectURL(imageFiles.item(i))}/>)
-        }
-      } else if (imageUrl) {
-        for(let i = 0; i < imageUrl.length; i++) {
-          imagePreviewArray.push(<ImagePreview key={i} width={100} height={100} alt='image' src={imageUrl[i]}/>)
-        }
+  const imageFileList = useMemo(() => {
+    const imagePreviewArray = []
+    if (imageFiles) {
+      for (let i = 0; i < imageFiles.length; i++) {
+        imagePreviewArray.push(
+          <ImagePreview
+            key={i}
+            width={100}
+            height={100}
+            alt={imageFiles.item(i).name}
+            src={URL.createObjectURL(imageFiles.item(i))}
+          />
+        )
       }
-      return imagePreviewArray
-    },[imageFiles,imageUrl])
-    
+    } else if (imageUrl) {
+      for (let i = 0; i < imageUrl.length; i++) {
+        imagePreviewArray.push(<ImagePreview key={i} width={100} height={100} alt='image' src={imageUrl[i]} />)
+      }
+    }
+    return imagePreviewArray
+  }, [imageFiles, imageUrl])
+
   return (
     <Container>
       <UploadZone onDragOver={handleDragOver} onDrop={handleDrop}>
-        <input
-          type='file'
-          accept='image/*'
-          onChange={handleUploadInput}
-          multiple
-          hidden
-          ref={inputRef}
-        />
-        {imageFileList.length > 0 || imageUrl 
-          ? <ImagePreviewContainer>{imageFileList}</ImagePreviewContainer> 
-          : <><button type="button"
-          onClick={() => inputRef.current.click()}
-        >
-          이미지 선택
-        </button><div>드래그 앤 드롭</div></>
-        }
+        <input type='file' accept='image/*' onChange={handleUploadInput} multiple hidden ref={inputRef} />
+        {imageFileList.length > 0 || imageUrl ? (
+          <ImagePreviewContainer>{imageFileList}</ImagePreviewContainer>
+        ) : (
+          <>
+            <button type='button' onClick={() => inputRef.current.click()}>
+              이미지 선택
+            </button>
+            <div>드래그 앤 드롭</div>
+          </>
+        )}
       </UploadZone>
       <ButtonContainer>
-        {initialImageUrl && <button type="button" onClick={handleUseExistImage}>원래대로</button>}
-        <button type="button" onClick={handleResetImage}>이미지 삭제</button>
+        {initialImageUrl && (
+          <button type='button' onClick={handleUseExistImage}>
+            원래대로
+          </button>
+        )}
+        <button type='button' onClick={handleResetImage}>
+          이미지 삭제
+        </button>
       </ButtonContainer>
-    </Container>)
+    </Container>
+  )
 }
 
 export default memo(UploadFileArea)
@@ -111,7 +120,7 @@ const ImagePreviewContainer = styled.div`
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3,1fr);
+  grid-template-rows: repeat(3, 1fr);
   align-items: center;
   justify-items: center;
 `
@@ -130,7 +139,6 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
 `
-
 
 const Container = styled.div`
   gap: 20px;

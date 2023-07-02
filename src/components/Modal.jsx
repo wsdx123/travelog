@@ -1,24 +1,21 @@
-import React from 'react'
 import { styled } from 'styled-components'
 
-
 const StyledContainer = styled.div`
-
   position: fixed;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000;
 `
 
 const StyledModalBackGround = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0, 0.3);
+  background-color: rgba(0, 0, 0, 0.3);
 `
 
 const StyledModal = styled.div`
@@ -47,10 +44,6 @@ const ModalHeader = styled.div`
   font-weight: 600;
 `
 
-const ModalBody = styled.div`
-  
-`
-
 const StyledButton = styled.button`
   background-color: transparent;
   border: none;
@@ -64,25 +57,23 @@ const StyledButton = styled.button`
   }
 `
 
-const Modal = ({type='alert', title, closeFunc, confirmFunc, children}) => {
+const Modal = ({ type = 'alert', title, closeFunc, confirmFunc, children }) => {
   return (
     <StyledContainer>
-      <StyledModalBackGround onClick={type === 'alert' ? closeFunc : null}/>
+      <StyledModalBackGround onClick={type === 'alert' ? closeFunc : null} />
       <StyledModal>
         <ModalHeader>
-          <div>
-            {title}
-          </div>
-        <StyledModalButtons>
-          {type === 'confirm' && 
-          <StyledButton onClick={closeFunc} color='secondary'>닫기</StyledButton>
-          }
-          <StyledButton onClick= {type === 'confirm' ? confirmFunc : closeFunc}>확인</StyledButton>
-        </StyledModalButtons>
+          <div>{title}</div>
+          <StyledModalButtons>
+            {type === 'confirm' && (
+              <StyledButton onClick={closeFunc} color='secondary'>
+                닫기
+              </StyledButton>
+            )}
+            <StyledButton onClick={type === 'confirm' ? confirmFunc : closeFunc}>확인</StyledButton>
+          </StyledModalButtons>
         </ModalHeader>
-        <ModalBody>
-        {children}
-        </ModalBody>
+        <div>{children}</div>
       </StyledModal>
     </StyledContainer>
   )

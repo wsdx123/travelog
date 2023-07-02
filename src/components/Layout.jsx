@@ -1,12 +1,8 @@
-import { signOut } from '@firebase/auth'
-import { auth } from 'firebase.js'
-
-import React from 'react'
-
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
+import { signOut } from '@firebase/auth'
 
-// 왜 새로고침하고 로그인 페이지로 오면 auth.currentUser 값이 남아있는지?
+import { auth } from 'firebase.js'
 
 function Header() {
   const navigate = useNavigate()
@@ -108,7 +104,6 @@ const layoutStyles = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  // minHeight: '90vh',
   width: '100%',
   fontFamily: 'IBM Plex Sans KR',
 }

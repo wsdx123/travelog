@@ -1,39 +1,27 @@
-import React from 'react'
-import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-
-import { useRef } from 'react'
-import { deletePost, getPostByPostId, updatePost } from 'fb/db'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { auth } from 'firebase.js'
-import { v4 } from 'uuid'
-import { deletePostWithData } from '../fb/db'
-
 import { styled } from 'styled-components'
+import { v4 } from 'uuid'
+
+import { getPostByPostId, updatePost, deletePostWithData } from 'fb/db'
 import { Season, TravelWith } from 'components/CardItem'
+import { auth } from 'firebase.js'
 
 function DetailPage() {
-  const [post, setPost] = useState(null)
-  const { postId } = useParams()
-
-  const navigate = useNavigate()
-
-  const [input, setInput] = useState('')
-  const [comments, setComments] = useState([])
-
-  console.log('comments->', comments)
-
   const [editComment, setEditComment] = useState('')
+  const [comments, setComments] = useState([])
   const [isEdit, setIsEdit] = useState('')
+  const [post, setPost] = useState(null)
+  const [input, setInput] = useState('')
 
   const addInputRef = useRef()
-  const editInputRef = useRef()
+
+  const { postId } = useParams()
+  const navigate = useNavigate()
 
   const handleComments = async (e) => {
     e.preventDefault()
-
     setInput('')
-
     try {
       const tmp = { text: input, uid: auth.currentUser.uid, id: v4() }
       await updatePost(post.id, { comments: [...comments, tmp] })
@@ -41,13 +29,10 @@ function DetailPage() {
     } catch (error) {
       console.log(error)
     }
-
-    // 왜 안되는거임??ㅠㅠ
-    // addInputRef.current.focus()
   }
 
   const handleDeletePost = async () => {
-    if (auth.currentUser.uid !== post.uid) return
+    if (auth.currentUser.uid !== post.uid) return alert('삭제 권한이 없습니다.')
     try {
       await deletePostWithData(post.postId)
       navigate('/')
@@ -67,7 +52,7 @@ function DetailPage() {
   const handleCommentsDelete = async (id, uid) => {
     if (auth.currentUser.uid !== uid) return alert('권한이 없습니다')
     try {
-      const tmp = post.comments.filter((el) => el.id !== id)
+      const tmp = comments.filter((el) => el.id !== id)
       await updatePost(post.id, { comments: tmp })
       setComments(tmp)
     } catch (error) {
@@ -79,7 +64,6 @@ function DetailPage() {
     e.preventDefault()
     try {
       const tmp = comments.map((el) => (el.id === id ? { ...el, text: editComment } : el))
-      console.log(tmp)
       await updatePost(post.id, { comments: tmp })
       setComments(tmp)
     } catch (error) {
@@ -92,7 +76,6 @@ function DetailPage() {
   const loadPost = useCallback(async () => {
     try {
       const postData = await getPostByPostId(postId)
-      console.log(postData)
       if (!postData) {
         console.log('redirect')
         navigate('/')
@@ -111,13 +94,9 @@ function DetailPage() {
 
   useEffect(() => {
     if (addInputRef.current) addInputRef.current.focus()
-    console.log(addInputRef.current)
   }, [addInputRef, post])
 
   if (!post) return <div>Loadng...</div>
-
-  console.log(comments)
-
   return (
     <StDetailPage>
       <div>
@@ -126,7 +105,6 @@ function DetailPage() {
           <Link className='inner-Link' to={`/postPage?action=edit&postId=${post.postId}`}>
             수정하기
           </Link>
-          {/* <button onClick={updatePost}>수정</button> */}
           <button onClick={handleDeletePost}>삭제</button>
         </div>
         <div className='inner-context'>

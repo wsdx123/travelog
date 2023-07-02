@@ -1,10 +1,11 @@
-import { auth, db } from 'firebase.js'
-import { createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth'
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
+import { useState } from 'react'
+
 import { LoginInput } from './SignInPage'
+import { auth, db } from 'firebase.js'
 
 export const Container = styled.div`
   display: flex;
@@ -23,7 +24,6 @@ export const Title = styled.h1`
 export const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
   margin-bottom: 20px;
 
@@ -33,13 +33,12 @@ export const FormContainer = styled.form`
 `
 
 const EMAIL_REG = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
-
 const PW_REG = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/
 
 function SignUpPage() {
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [verifyPw, setVerifyPw] = useState('')
+  const [email, setEmail] = useState('')
 
   const navigate = useNavigate()
 
@@ -70,7 +69,6 @@ function SignUpPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const newInfo = { name: '', email: email, places: '', intro: '', id: userCredential.user.uid, profile: '' }
-      // const collectionRef = collection(db, 'users')
       await setDoc(doc(db, 'users', userCredential.user.uid), newInfo)
 
       signOut(auth)
@@ -83,12 +81,6 @@ function SignUpPage() {
       }
     }
   }
-
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     console.log(user)
-  //   })
-  // }, [])
 
   return (
     <Container>

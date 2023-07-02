@@ -1,25 +1,22 @@
-import { storage } from 'fb/storage'
-import { db } from 'firebase.js'
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useEffect, useMemo, useState } from 'react'
-
-import * as S from 'components/MyPage.styled.js'
-import UpdateProfile from 'components/UpdateProfile'
-import Profile from 'components/Profile'
 import { useNavigate, useParams } from 'react-router-dom'
-import PostCards from 'components/PostCards'
 
-import { styled } from 'styled-components'
+import UpdateProfile from 'components/UpdateProfile'
+import * as S from 'components/MyPage.styled.js'
+import PostCards from 'components/PostCards'
+import Profile from 'components/Profile'
+import { storage } from 'fb/storage'
+import { db } from 'firebase.js'
 
 function MyPage() {
   const [userUpdate, setUserUpdate] = useState(false)
   const [postsTab, setPostsTab] = useState(true)
-  const [userInfo, setUserInfo] = useState({})
-  const [myPosts, setMyPosts] = useState([])
-
   const [preview, setPreview] = useState(null)
   const [imgFile, setImgFile] = useState(null)
+  const [userInfo, setUserInfo] = useState({})
+  const [myPosts, setMyPosts] = useState([])
 
   const navigate = useNavigate()
   const params = useParams()
@@ -95,8 +92,6 @@ function MyPage() {
     fetchData()
   }, [navigate, params.myId, session])
 
-  // console.log(userInfo)
-
   // myPage 작성한 게시물, 좋아요한 게시물 모아보는 탭 불러오기
   useEffect(() => {
     const fetchPostsTab = async () => {
@@ -124,47 +119,6 @@ function MyPage() {
     setMyPosts([])
     fetchPostsTab()
   }, [params.myId, postsTab])
-  console.log(myPosts)
-  console.log(session)
-
-  // style components
-  //    const StMyPage = styled.div`
-  //    width: 50%;
-  //    justify-content: center;
-  //    margin: 0 auto;
-  //    text-align: center;
-  //    line-height: 30px;
-  //    font-family: IBM Plex Sans KR;
-
-  //    .inner-img {
-  //      width: 100%;
-  //    }
-
-  //    .inner-context {
-  //      margin-top: 20px;
-  //      text-align: left;
-  //    }
-
-  //    .inner-buttons {
-  //      text-align: right;
-  //    }
-
-  //    .StComments {
-  //      margin-top: 40px;
-  //      padding: 50px;
-  //      border: 1px solid #050505;
-  //    }
-
-  //    .inputStyle {
-  //      width: 70%;
-  //      height: 25px;
-  //      margin-bottom: 50px;
-  //      border-radius: 15px;
-  //      border: 1px solid #050505;
-  //      background: #050505;
-  //      color: white;
-  //    }
-  //  `
 
   return (
     <S.MyPageContainer>

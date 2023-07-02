@@ -1,27 +1,27 @@
-import { useQuery } from 'hooks'
-import { createPost, getPostByPostId, updatePost } from '../fb/db'
-import React, { useCallback, useEffect, useState } from 'react'
-import { redirect, useNavigate } from 'react-router-dom'
-import PostForm from 'components/PostForm'
+import { useCallback, useEffect, useState } from 'react'
+import { doc, setDoc } from 'firebase/firestore'
+import { useNavigate } from 'react-router-dom'
 import { v4 } from 'uuid'
+
+import { createPost, getPostByPostId, updatePost } from 'fb/db'
 import { deleteImagesByPostId, uploadImage } from 'fb/storage'
 import ProgressBar from 'components/ProgressBar'
-
+import PostForm from 'components/PostForm'
 import { auth, db } from 'firebase.js'
-import { doc, setDoc } from 'firebase/firestore'
+import { useQuery } from 'hooks'
 
 function PostPage() {
+  const [progressTitle, setProgressTitle] = useState('')
+  const [isPosting, setIsPosting] = useState(false)
   const [isLoaded, setLoaded] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [post, setPost] = useState(null)
+
   const location = useQuery()
   const action = location.get('action')
   const postId = location.get('postId')
 
   const navigate = useNavigate()
-
-  const [isPosting, setIsPosting] = useState(false)
-  const [progressTitle, setProgressTitle] = useState('')
-  const [progress, setProgress] = useState(0)
 
   const uploadImages = async (postId, files) => {
     setProgressTitle('이미지 업로드 시작')
@@ -38,9 +38,7 @@ function PostPage() {
 
   const handleCreatePost = async (postData) => {
     const { imageFiles, destination, period, partner, content, locationData } = postData
-
     const uid = auth.currentUser.uid
-
     try {
       const postId = v4()
       setProgressTitle('글 저장 시작')
@@ -91,7 +89,7 @@ function PostPage() {
       if (imageUrl !== post.imageUrl) updatedPost['imageUrl'] = imageUrl
       await updatePost(post.id, updatedPost)
       setProgressTitle('글 업데이트 완료')
-      navigate(`/post/${postId}`)
+      navigate(`/postPage/${postId}`)
     } catch (error) {
       console.error(error)
     }
@@ -131,4 +129,3 @@ function PostPage() {
 }
 
 export default PostPage
-

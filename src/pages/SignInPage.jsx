@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Container, FormContainer, Title } from './SignUpPage'
 import { browserSessionPersistence, setPersistence, signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from 'firebase.js'
+import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
+import { useState } from 'react'
+
+import { Container, FormContainer, Title } from './SignUpPage'
+import { auth } from 'firebase.js'
 
 function SignInPage() {
   const [email, setEmail] = useState('')
@@ -22,7 +23,6 @@ function SignInPage() {
   const handleSignIn = async (e) => {
     e.preventDefault()
     try {
-      // const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const userCredential = await setPersistence(auth, browserSessionPersistence).then(() => {
         return signInWithEmailAndPassword(auth, email, password)
       })
