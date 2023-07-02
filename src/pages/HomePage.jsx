@@ -9,6 +9,7 @@ import SearchForm from 'components/SearchForm'
 import { useDispatch } from 'react-redux'
 import { loadPosts } from 'redux/modules/post'
 import { and, collection, getDocs, query, where } from 'firebase/firestore'
+import { styled } from 'styled-components'
 
 function HomePage() {
   // const dispatch = useDispatch()
@@ -59,14 +60,17 @@ function HomePage() {
     })
   }, [])
 
-
   return (
-    <div>
+    <Container>
       {/* <SearchForm /> */}
       <SearchForm filterData={filterData} />
       <CardList posts={posts} />
-    </div>
+    </Container>
   )
 }
 
 export default HomePage
+
+const Container = styled.div`
+  height: calc(100vh - 140px);
+`

@@ -4,6 +4,7 @@ import { auth } from 'firebase.js'
 import React from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
+import { styled } from 'styled-components'
 
 const HeaderStyles = {
   width: '100%',
@@ -91,9 +92,13 @@ function Layout({ children }) {
   return (
     <div>
       <Header />
-      <div style={{ ...layoutStyles }}>{children}</div>
+      <MainContainer style={{ ...layoutStyles }}>{children}</MainContainer>
     </div>
   )
 }
 
 export default Layout
+
+const MainContainer = styled.div`
+  height: calc(100vh - 140px);
+`
