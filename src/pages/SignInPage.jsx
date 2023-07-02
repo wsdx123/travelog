@@ -23,10 +23,9 @@ function SignInPage() {
   const handleSignIn = async (e) => {
     e.preventDefault()
     try {
-      const userCredential = await setPersistence(auth, browserSessionPersistence).then(() => {
+      await setPersistence(auth, browserSessionPersistence).then(() => {
         return signInWithEmailAndPassword(auth, email, password)
       })
-      console.log(userCredential)
       navigate('/')
     } catch (error) {
       const errorCode = error.code

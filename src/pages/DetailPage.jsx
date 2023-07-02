@@ -23,9 +23,9 @@ function DetailPage() {
     e.preventDefault()
     setInput('')
     try {
-      const tmp = { text: input, uid: auth.currentUser.uid, id: v4() }
-      await updatePost(post.id, { comments: [...comments, tmp] })
-      setComments((prev) => [...prev, tmp])
+      const newComment = { text: input, uid: auth.currentUser.uid, id: v4() }
+      await updatePost(post.id, { comments: [...comments, newComment] })
+      setComments((prev) => [...prev, newComment])
     } catch (error) {
       console.log(error)
     }
@@ -52,9 +52,9 @@ function DetailPage() {
   const handleCommentsDelete = async (id, uid) => {
     if (auth.currentUser.uid !== uid) return alert('권한이 없습니다')
     try {
-      const tmp = comments.filter((el) => el.id !== id)
-      await updatePost(post.id, { comments: tmp })
-      setComments(tmp)
+      const filteredComment = comments.filter((el) => el.id !== id)
+      await updatePost(post.id, { comments: filteredComment })
+      setComments(filteredComment)
     } catch (error) {
       console.log(error)
     }
@@ -63,9 +63,9 @@ function DetailPage() {
   const handleCommentsUpdate = async (id, e) => {
     e.preventDefault()
     try {
-      const tmp = comments.map((el) => (el.id === id ? { ...el, text: editComment } : el))
-      await updatePost(post.id, { comments: tmp })
-      setComments(tmp)
+      const modifiedComment = comments.map((el) => (el.id === id ? { ...el, text: editComment } : el))
+      await updatePost(post.id, { comments: modifiedComment })
+      setComments(modifiedComment)
     } catch (error) {
       console.log(error)
     }
@@ -77,7 +77,6 @@ function DetailPage() {
     try {
       const postData = await getPostByPostId(postId)
       if (!postData) {
-        console.log('redirect')
         navigate('/')
       }
       setPost(postData)
