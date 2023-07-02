@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Container, FormContainer, Title } from './SignUpPage'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { browserSessionPersistence, setPersistence, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from 'firebase.js'
 
 function SignInPage() {
@@ -21,7 +21,10 @@ function SignInPage() {
   const handleSignIn = async (e) => {
     e.preventDefault()
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      // const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const userCredential = await setPersistence(auth, browserSessionPersistence).then(() => {
+        return signInWithEmailAndPassword(auth, email, password)
+      })
       console.log(userCredential)
       navigate('/')
     } catch (error) {

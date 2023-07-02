@@ -7,7 +7,11 @@ function PostCards({ data }) {
     navigate(`/postPage/${data.postId}`)
   }
   console.log(data)
-  return <S.CardItem onClick={navigateDetail}>{data.destination}</S.CardItem>
+  return (
+    <S.CardItem onClick={navigateDetail}>
+      <img alt='titleImg' src={data.imageUrl} />
+    </S.CardItem>
+  )
 }
 
 export default PostCards

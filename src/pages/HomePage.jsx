@@ -13,7 +13,7 @@ function HomePage() {
     getPostsAll().then((postsArray) => setPosts(postsArray))
   }, [])
 
-  useEffect(() => {}, [posts])
+
   return (
     <div>
       <SearchForm />

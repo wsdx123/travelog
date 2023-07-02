@@ -6,7 +6,9 @@ import PostForm from 'components/PostForm'
 import { v4 } from 'uuid'
 import { deleteImage, uploadImage } from 'fb/storage'
 import ProgressBar from 'components/ProgressBar'
-import { auth } from 'firebase.js'
+
+import { auth, db } from 'firebase.js'
+
 
 function PostPage() {
   const [isLoaded,setLoaded] = useState(false)
@@ -17,9 +19,11 @@ function PostPage() {
 
   const navigate = useNavigate()
 
+
   const [isPosting, setIsPosting] = useState(false)
   const [progressTitle,setProgressTitle] = useState('')
   const [progress,setProgress] = useState(0)
+
 
 
   const uploadImages = async (postId, files) => {
@@ -38,6 +42,9 @@ function PostPage() {
   const handleCreatePost = async (postData) => {
     const { imageFiles, destination, period, partner, content, locationData } = postData
 
+    const uid = auth.currentUser.uid
+
+
     try {
       const postId = v4()
       setProgressTitle('글 저장 시작')
@@ -45,7 +52,6 @@ function PostPage() {
       const imageUrl = imageFiles ? await uploadImages(postId, imageFiles) : ''
 
       setProgressTitle('글 저장 중')
-      const uid = auth.currentUser.uid
 
       const newPost = {
         postId,
@@ -60,6 +66,9 @@ function PostPage() {
         isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
+      await setDoc(doc(db, 'likes', postId), {
+        likedList: [],
+      })
       setProgressTitle('글 저장 완료')
       navigate(`/`)
     } catch (error) {
@@ -110,6 +119,7 @@ function PostPage() {
     }
     else setLoaded(true)
   }, [postId, loadPost])
+
 
 
     if(!isLoaded) return null
