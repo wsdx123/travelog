@@ -53,6 +53,7 @@ function PostPage() {
         imageUrl,
         locationData,
         uid,
+        comments: [],
         isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
