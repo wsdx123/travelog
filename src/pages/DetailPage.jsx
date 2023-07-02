@@ -10,6 +10,7 @@ import { v4 } from 'uuid'
 import { deletePostWithData } from '../fb/db'
 
 import { styled } from 'styled-components'
+import { Season, TravelWith } from 'components/CardItem'
 
 function DetailPage() {
   const [post, setPost] = useState(null)
@@ -122,14 +123,22 @@ function DetailPage() {
       <div>
         <img className='inner-img' alt='postedImage' src={post.imageUrl} />
         <div className='inner-buttons'>
-          <Link to={`/postPage?action=edit&postId=${post.postId}`}>수정하기</Link>
+          <Link className='inner-Link' to={`/postPage?action=edit&postId=${post.postId}`}>
+            수정하기
+          </Link>
           {/* <button onClick={updatePost}>수정</button> */}
           <button onClick={handleDeletePost}>삭제</button>
         </div>
         <div className='inner-context'>
-          <p>{post.period}</p>
-          <p>{post.destination}</p>
-          <p>{post.partner}</p>
+          <p>
+            <strong>여행시기</strong> | {Season[post.period]}
+          </p>
+          <p>
+            <strong>목적지</strong> | {post.destination}
+          </p>
+          <p>
+            <strong>함께 여행한 사람</strong> | {TravelWith[post.partner]}
+          </p>
           <p>"{post.content}"</p>
         </div>
       </div>
@@ -198,10 +207,35 @@ const StDetailPage = styled.div`
     padding-left: 10px;
     margin-top: 20px;
     text-align: left;
+
+    p {
+      strong {
+        font-weight: 600;
+      }
+    }
   }
 
   .inner-buttons {
-    text-align: right;
+    display: flex;
+    justify-content: end;
+
+    .inner-Link {
+      margin: 4px;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      color: black;
+      font-size: 13px;
+      width: 120px;
+      height: 30px;
+      background: #ffffff 0% 0% no-repeat padding-box;
+      border: 1px solid #050505;
+      box-sizing: border-box;
+      border-radius: 32px;
+      opacity: 1;
+      cursor: pointer;
+      font-family: IBM Plex Sans KR;
+    }
   }
 
   .StComments {

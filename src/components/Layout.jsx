@@ -6,8 +6,6 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 
-import { styled } from 'styled-components'
-
 // 왜 새로고침하고 로그인 페이지로 오면 auth.currentUser 값이 남아있는지?
 
 function Header() {
@@ -80,7 +78,6 @@ function Layout({ children }) {
 
 export default Layout
 
-
 // style components
 const StTitleText = styled.p`
   float: left;
@@ -90,6 +87,8 @@ const StTitleText = styled.p`
 
 const HeaderStyles = {
   position: 'fixed',
+  top: '0',
+  left: '0',
   zIndex: '9999',
   width: '100%',
   background: '#DAFF5B',
@@ -122,6 +121,5 @@ const navBtn = {
 }
 
 const MainContainer = styled.div`
-  height: calc(100vh - 140px);
+  margin-top: 140px;
 `
-

@@ -61,16 +61,12 @@ function HomePage() {
   }, [])
 
   return (
-    <Container>
+    <div>
       {/* <SearchForm /> */}
       <SearchForm filterData={filterData} />
       <CardList posts={posts} />
-    </Container>
+    </div>
   )
 }
 
 export default HomePage
-
-const Container = styled.div`
-  height: calc(100vh - 140px);
-`

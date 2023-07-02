@@ -64,7 +64,7 @@ const SearchForm = ({ filterData }) => {
     width: '100%',
     textAlign: 'center',
     margin: '0 auto',
-    marginTop: '160px', //layout fixed 후
+    marginTop: '20px', //layout fixed 후
     marginBottom: '20px',
   }
 

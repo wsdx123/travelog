@@ -9,6 +9,20 @@ import { HeartIcon } from 'assets/svgs'
 
 import { Link, useNavigate } from 'react-router-dom'
 
+export const Season = {
+  spring: '봄',
+  summer: '여름',
+  fall: '가을',
+  winter: '겨울',
+}
+export const TravelWith = {
+  couple: '커플',
+  family: '가족',
+  friend: '친구',
+  alone: '혼자',
+  etc: '기타',
+}
+
 function CardItem({ post }) {
   const dispatch = useDispatch()
   const [heart, setHeart] = useState(false)
@@ -55,9 +69,15 @@ function CardItem({ post }) {
             <HeartIcon className={heart ? 'selectFavorite' : 'heartIcon'} />
           </Button>
           <p style={{ fontSize: '0.7em', fontWeight: '600' }}>좋아요 {totalHeart}개</p>
-          <p style={{ marginTop: '20px' }}>{post.destination}</p>
-          <p>{post.period}</p>
-          <p>{post.partner}</p>
+          <p style={{ marginTop: '20px' }}>
+            <strong>목적지</strong> | {post.destination}
+          </p>
+          <p>
+            <strong>여행시기</strong> | {Season[post.period]}
+          </p>
+          <p>
+            <strong>함께 여행한 사람</strong> | {TravelWith[post.partner]}
+          </p>
           <div style={{ marginTop: '25px' }}>{post.content}</div>
           <div style={{ float: 'right', bottom: '0' }}>
             <Link to={`/postPage/${post.postId}`}>DETAILS</Link>
@@ -90,6 +110,12 @@ const StPostCard = styled.div`
   }
   .inner-component-text {
     padding: 20px;
+
+    p {
+      strong {
+        font-weight: 600;
+      }
+    }
   }
 `
 

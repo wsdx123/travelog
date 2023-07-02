@@ -90,9 +90,7 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
   }
 
   return (
-
     <FormContainer>
-
       <form onSubmit={handleSubmit}>
         <FormInner>
           <UploadFileArea
@@ -145,17 +143,13 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
               <LocationContainer>{locationData?.name}</LocationContainer>
               {!isEdit &&
                 (locationData.name ? (
-                  <button 
-                    type='button' 
-                    onClick={handleDeleteLocation}
-                  >
+                  <button type='button' onClick={handleDeleteLocation}>
                     삭제
                   </button>
                 ) : (
-                  <button 
-                    type='button' 
-                    onClick={() => setOpenLocationModal(true)}
-                  >위치 찾기</button>
+                  <button type='button' onClick={() => setOpenLocationModal(true)}>
+                    위치 찾기
+                  </button>
                 ))}
             </FormRow>
             <FormRow>
@@ -167,17 +161,13 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
               />
             </FormRow>
             <FormRow>
-              <button onClick={handleCancel}>
-                취소
-              </button>
+              <button onClick={handleCancel}>취소</button>
               {isEdit && (
-                <button type='button' onClick={handleDeletePost} >
+                <button type='button' onClick={handleDeletePost}>
                   글 삭제
                 </button>
               )}
-              <button type='submit'>
-                {isEdit ? '글 수정' : '글 쓰기'}
-              </button>
+              <button type='submit'>{isEdit ? '글 수정' : '글 쓰기'}</button>
             </FormRow>
           </FormMenu>
         </FormInner>
@@ -187,9 +177,7 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
           <KakaoMap onChange={setLocationData} />
         </Modal>
       )}
-
     </FormContainer>
-
   )
 }
 
