@@ -1,7 +1,6 @@
 import { isFileSizeOver, sliceFilesMax } from "common"
 import { memo, useMemo, useRef, useState } from "react"
 import { styled } from "styled-components"
-import Button from "./Button"
 import { Image } from "@phosphor-icons/react"
 
 function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
@@ -77,18 +76,16 @@ function UploadFileArea({ initialImageUrl, onChange, resetImage }) {
         />
         {imageFileList.length > 0 || imageUrl 
           ? <ImagePreviewContainer>{imageFileList}</ImagePreviewContainer> 
-          : <Button 
-              style={{position:'absolute'}} 
-              onClick={() => inputRef.current.click()}
-              icon={<Image size={20} />}
-            >
-              이미지 선택
-            </Button>
+          : <><button type="button"
+          onClick={() => inputRef.current.click()}
+        >
+          이미지 선택
+        </button><div>드래그 앤 드롭</div></>
         }
       </UploadZone>
       <ButtonContainer>
-        <Button variant='outlined' onClick={handleUseExistImage}>원래대로</Button>
-        <Button variant='outlined' onClick={handleResetImage}>삭제</Button>
+        {initialImageUrl && <button type="button" onClick={handleUseExistImage}>원래대로</button>}
+        <button type="button" onClick={handleResetImage}>이미지 삭제</button>
       </ButtonContainer>
     </Container>)
 }
@@ -98,10 +95,12 @@ export default memo(UploadFileArea)
 const UploadZone = styled.div`
   width: 400px;
   height: 400px;
-  border: 2px dashed #0099ff;
+  border: 2px solid #000;
   border-radius: 20px;
   position: relative;
   display: flex;
+  flex-direction: column;
+  gap: 14px;
   align-items: center;
   justify-content: center;
 `
@@ -118,25 +117,24 @@ const ImagePreviewContainer = styled.div`
 `
 
 const ImagePreview = styled.img`
-  background-color: #0099ff2b;
+  background-color: #0000007a;
   border-radius: 20px;
   display: inline-block;
   object-fit: contain;
   -webkit-user-drag: none;
   -moz-user-drag: none;
   -ms-user-drag: none;
-
 `
 
 const ButtonContainer = styled.div`
-  gap: 20px;
   display: flex;
-  align-items: center;
   justify-content: center;
 `
+
 
 const Container = styled.div`
   gap: 20px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `

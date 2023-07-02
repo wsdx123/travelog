@@ -153,7 +153,8 @@ const KakaoMap = ({ onChange }) => {
 
   useEffect(() => {
     if (menu === "place" && placeResult?.length > 0) setBoundary(placeResult);
-    if (menu === "address" && placeResult?.length > 0) setBoundary(addressResult);
+    if (menu === "address" && addressResult?.length > 0) setBoundary(addressResult);
+
   }, [menu, placeResult, addressResult]);
 
   useEffect(() => {
@@ -240,6 +241,7 @@ const renderPoints = useMemo(()=>{
               <S.StyledButton type="submit">찾기</S.StyledButton>
             </S.FormInner>
           </form>
+          <S.TabMenuContainer>
           <S.TabMenu>
             <S.TabMenuItem
               $isSelected={(menu === "coords").toString()}
@@ -263,6 +265,7 @@ const renderPoints = useMemo(()=>{
               지역
             </S.TabMenuItem>
           </S.TabMenu>
+          </S.TabMenuContainer>
           {
             <PlacesList
               places={renderPoints}
