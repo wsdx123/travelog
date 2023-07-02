@@ -48,7 +48,7 @@ function CardItem({ post }) {
       key={post.postId}
     >
       {post.postId} | <img src={post.imageUrl} style={{ width: '100px' }} /> | {post.destinaion} | {post.period} |{' '}
-      {post.partner} | {post.content}|{post.isLiked.toString()}
+      {post.partner} | {post.content}|
       <div>
         <button>
           {/* dropdown 수정, 삭제 버튼 만들기 */}

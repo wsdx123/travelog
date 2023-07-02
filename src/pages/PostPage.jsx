@@ -8,10 +8,10 @@ import { deleteImage, uploadImage } from 'fb/storage'
 import ProgressBar from 'components/ProgressBar'
 
 import { auth, db } from 'firebase.js'
-
+import { doc, setDoc } from 'firebase/firestore'
 
 function PostPage() {
-  const [isLoaded,setLoaded] = useState(false)
+  const [isLoaded, setLoaded] = useState(false)
   const [post, setPost] = useState(null)
   const location = useQuery()
   const action = location.get('action')
@@ -19,12 +19,9 @@ function PostPage() {
 
   const navigate = useNavigate()
 
-
   const [isPosting, setIsPosting] = useState(false)
-  const [progressTitle,setProgressTitle] = useState('')
-  const [progress,setProgress] = useState(0)
-
-
+  const [progressTitle, setProgressTitle] = useState('')
+  const [progress, setProgress] = useState(0)
 
   const uploadImages = async (postId, files) => {
     setProgressTitle('이미지 업로드 시작')
@@ -44,7 +41,6 @@ function PostPage() {
 
     const uid = auth.currentUser.uid
 
-
     try {
       const postId = v4()
       setProgressTitle('글 저장 시작')
@@ -63,7 +59,6 @@ function PostPage() {
         locationData,
         uid,
         comments: [],
-        isLiked: false, // 하트용 Boolean 값 추가
       }
       await createPost(newPost)
       await setDoc(doc(db, 'likes', postId), {
@@ -115,25 +110,21 @@ function PostPage() {
 
   useEffect(() => {
     if (postId) {
-      loadPost().then(()=>setLoaded(true))
-    }
-    else setLoaded(true)
+      loadPost().then(() => setLoaded(true))
+    } else setLoaded(true)
   }, [postId, loadPost])
 
-
-
-    if(!isLoaded) return null
-    return (
-      <div>
-        <PostForm  
-          onSubmit={action === 'write' ? handleCreatePost : handleUpdatePost}
-          isEdit={action==='edit'}
-          postData={post}
-        />
-        <ProgressBar value={progress} title={progressTitle} open={isPosting}/>
-
-      </div>
-    )
+  if (!isLoaded) return null
+  return (
+    <div>
+      <PostForm
+        onSubmit={action === 'write' ? handleCreatePost : handleUpdatePost}
+        isEdit={action === 'edit'}
+        postData={post}
+      />
+      <ProgressBar value={progress} title={progressTitle} open={isPosting} />
+    </div>
+  )
 }
 
 export default PostPage
