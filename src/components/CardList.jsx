@@ -1,7 +1,7 @@
 import { collection, getDocs, query } from '@firebase/firestore'
 import { db } from '../firebase' // firebase db 임포트!
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -34,27 +34,26 @@ function CardList() {
 
   return (
     <div>
-      CardList
       {posts.map((post) => {
         const heart = post.isLiked ? 'heartFilled' : 'heartEmpty'
         // 불리안 값으로 좋아요 하트 상태 변경
 
         return (
-          <div
-            style={{
-              padding: '10px',
-              margin: '10px',
-              float: 'column',
-            }}
-            key={post.postId}
-          >
-            {post.postId} | <img src={post.imageUrl} style={{ width: '100px' }} /> | {post.destinaion} | {post.period} |{' '}
-            {post.partner} | {post.content}|{post.isLiked.toString()}
+          <div key={post.postId}>
+            <img alt='postimage' src={post.imageUrl} style={{ width: '200px' }} /> <br />
             <div>
-              <button>
-                {/* dropdown 수정, 삭제 버튼 만들기 */}
-                <Link to={`/postPage/${post.postId}`}>EDIT</Link>
-              </button>
+              <li style={{ display: 'flex' }}>
+                <ul>user.id</ul>
+                <ul>{post.period}</ul>
+                <ul>{post.destination}</ul>
+                <ul>{post.partner}</ul>
+                <ul>{post.content}</ul>
+              </li>
+            </div>
+            {/* 좋아요: {post.isLiked.toString()} */}
+            {/* postId: {post.postId} */}
+            <div>
+              <Link to={`/postPage/${post.postId}`}>EDIT</Link>
             </div>
             <div>
               <button
@@ -67,19 +66,18 @@ function CardList() {
               >
                 DELETE
               </button>
+
+              <button
+                onClick={() => {
+                  dispatch({
+                    type: 'ISLIKED_POST',
+                    payload: post.postId,
+                  })
+                }}
+              >
+                {heart}
+              </button>
             </div>
-            <button
-              onClick={() => {
-                dispatch({
-                  type: 'ISLIKED_POST',
-                  payload: post.postId,
-                })
-              }}
-            >
-              {heart}
-            </button>
-            {/* <button onClick={delPost}>DELETE</button>
-            <button onClick={islikedPost}>{heart}</button> */}
           </div>
         )
       })}

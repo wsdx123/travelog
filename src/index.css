@@ -1,15 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@100;200;300;400;500;600;700&family=Poor+Story&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #bfbda8;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .customOverlay {
@@ -26,4 +27,15 @@ code {
   padding: 10px;
   white-space: normal;
   word-break: break-all;
+}
+
+button {
+  margin: 4px;
+  width: 120px;
+  height: 30px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #050505;
+  border-radius: 32px;
+  opacity: 1;
+  cursor: pointer;
 }

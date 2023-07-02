@@ -8,11 +8,12 @@ import { Link, useNavigate } from 'react-router-dom'
 const HeaderStyles = {
   width: '100%',
   background: '#DAFF5B',
-  height: '50px',
-  display: 'flex',
+  height: '100px',
+  padding: '20px',
+  display: 'block',
   alignItems: 'center', // 세로 가운데 정렬
-  justifyContent: 'center', // 가로 가운데 정렬
-  // paddingLeft: '20px',
+  justifyContent: 'left', // 가로 가운데 정렬
+  paddingLeft: '20px',
   color: 'black',
   fontWeight: '600',
 }
@@ -23,6 +24,13 @@ const layoutStyles = {
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '90vh',
+}
+
+const navBtn = {
+  float: 'right',
+  display: 'grid',
+  marginRight: '50px',
+  padding: '20px',
 }
 
 // 왜 새로고침하고 로그인 페이지로 오면 auth.currentUser 값이 남아있는지?
@@ -39,9 +47,14 @@ function Header() {
     navigate('/')
   }
 
+  const handleWritePost = async () => {
+    navigate(`/PostPage?action=write`)
+  }
+
   return (
     <div style={{ ...HeaderStyles }}>
-      <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+      <p>여행자 트래블 로그</p>
+      <span onClick={() => navigate('/')} style={{ float: 'left', fontSize: '80px', cursor: 'pointer' }}>
         TRAVELOG
       </span>
       <nav style={{ paddingLeft: '20px' }}>
@@ -51,9 +64,11 @@ function Header() {
             <Link to='/SignInPage'>로그인</Link>
           </div>
         ) : (
-          <div>
-            <Link to='/PostPage?action=write'>게시글작성</Link>
-
+          <div style={{ ...navBtn }}>
+            {/* UI 맞춰주려고 같은 버튼 타입으로 변경 */}
+            <button type='button' onClick={handleWritePost}>
+              게시글작성
+            </button>
             <button type='button' onClick={handleMyPage}>
               My Page
             </button>
