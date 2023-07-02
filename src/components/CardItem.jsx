@@ -50,13 +50,18 @@ function CardItem({ post }) {
         <img className='inner-component-img' alt='imgPosted' src={post.imageUrl} />
       </StPostCard>
       <StPostCard>
-        <Button onClick={handleHeart}>
-          <HeartIcon className={heart ? 'selectFavorite' : 'heartIcon'} />
-        </Button>
-        <p>좋아요 {totalHeart}개</p>
-        {post.destinaion} |{post.period}|<div>{post.content}</div>
-        <div>
-          <Link to={`/postPage/${post.postId}`}>DETAIL</Link>
+        <div className='inner-component-text'>
+          <Button onClick={handleHeart}>
+            <HeartIcon className={heart ? 'selectFavorite' : 'heartIcon'} />
+          </Button>
+          <p style={{ fontSize: '0.7em', fontWeight: '600' }}>좋아요 {totalHeart}개</p>
+          <p style={{ marginTop: '20px' }}>{post.destination}</p>
+          <p>{post.period}</p>
+          <p>{post.partner}</p>
+          <div style={{ marginTop: '25px' }}>{post.content}</div>
+          <div style={{ float: 'right', bottom: '0' }}>
+            <Link to={`/postPage/${post.postId}`}>DETAILS</Link>
+          </div>
         </div>
       </StPostCard>
     </div>
@@ -82,6 +87,9 @@ const StPostCard = styled.div`
     height: 100%;
     object-fit: cover;
     object-position: center center;
+  }
+  .inner-component-text {
+    padding: 20px;
   }
 `
 

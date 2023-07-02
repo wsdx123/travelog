@@ -19,6 +19,9 @@ function DetailPage() {
 
   const [input, setInput] = useState('')
   const [comments, setComments] = useState([])
+
+  console.log('comments->', comments)
+
   const [editComment, setEditComment] = useState('')
   const [isEdit, setIsEdit] = useState('')
 
@@ -61,7 +64,7 @@ function DetailPage() {
   }
 
   const handleCommentsDelete = async (id, uid) => {
-    if (auth.currentUser.uid !== uid) return alert('권한이없습니다')
+    if (auth.currentUser.uid !== uid) return alert('권한이 없습니다')
     try {
       const tmp = post.comments.filter((el) => el.id !== id)
       await updatePost(post.id, { comments: tmp })
@@ -131,7 +134,7 @@ function DetailPage() {
         </div>
       </div>
       <div className='StComments'>
-        <p>COMMENTS</p>
+        <p style={{ fontSize: '2em', fontWeight: '600', padding: '20px' }}>COMMENTS</p>
         <form onSubmit={handleComments}>
           <input
             className='inputStyle'
@@ -145,18 +148,19 @@ function DetailPage() {
           />
           <button type='submit'>댓글등록</button>
         </form>
-        <div>
+        <div className='StCommentsList'>
           {comments.map((comment) => {
             return (
               <div key={`comments_ID_${comment.id}`}>
                 <div>
-                  <p>ID: {comment.uid} |</p>
-                  {/* ㄴ이거 유저아이디로 변경? */}
-                  <p>{comment.text}</p>
+                  <p>ID: {comment.uid}</p>
+                  <p style={{ fontWeight: '600' }}>{comment.text}</p>
                 </div>
-                <button onClick={() => verifyCommentsUpdate(comment.id, comment.uid)}>수정</button>
+                <div style={{ marginBottom: '40px' }}>
+                  <button onClick={() => verifyCommentsUpdate(comment.id, comment.uid)}>수정</button>
 
-                <button onClick={() => handleCommentsDelete(comment.id, comment.uid)}>삭제</button>
+                  <button onClick={() => handleCommentsDelete(comment.id, comment.uid)}>삭제</button>
+                </div>
                 {isEdit === comment.id ? (
                   <form onSubmit={(e) => handleCommentsUpdate(comment.id, e)}>
                     <input type='text' value={editComment} onChange={(e) => setEditComment(e.target.value)} />
@@ -191,6 +195,7 @@ const StDetailPage = styled.div`
   }
 
   .inner-context {
+    padding-left: 10px;
     margin-top: 20px;
     text-align: left;
   }
@@ -200,18 +205,25 @@ const StDetailPage = styled.div`
   }
 
   .StComments {
-    margin-top: 40px;
-    padding: 50px;
+    text-align: left;
+    margin-top: 30px;
+    padding: 20px;
     border: 1px solid #050505;
   }
 
   .inputStyle {
+    padding-left: 25px;
     width: 70%;
     height: 25px;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     border-radius: 15px;
     border: 1px solid #050505;
     background: #050505;
     color: white;
+  }
+
+  .StCommentsList {
+    padding-left: 20px;
+    margin-top: 40px;
   }
 `
