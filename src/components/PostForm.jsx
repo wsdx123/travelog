@@ -2,7 +2,6 @@ import { FloppyDisk, TrashSimple } from '@phosphor-icons/react'
 import { useState, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
-import Button from './Button'
 import TextArea from './TextArea'
 import SelectItem from './SelectItem'
 import Select from './Select'
@@ -91,7 +90,9 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
   }
 
   return (
-    <Container>
+
+    <FormContainer>
+
       <form onSubmit={handleSubmit}>
         <FormInner>
           <UploadFileArea
@@ -101,76 +102,82 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
           />
           <FormMenu>
             <FormRow>
-              <label htmlFor='travel_destination'>여행지: </label>
-              <InputText
-                name='travel_destination'
-                placeholder='여행지'
-                onChange={handleChangeDestination}
-                value={postData.destination}
-              />
+              <FormColumn>
+                <InputText
+                  name='travel_destination'
+                  placeholder='여행지'
+                  onChange={handleChangeDestination}
+                  value={postData.destination}
+                />
+              </FormColumn>
+              <FormColumn>
+                <Select
+                  name='travel_period'
+                  title='여행 시기'
+                  placeholder='여행 시기'
+                  onChange={handleChangePeriod}
+                  defaultValue={postData.period}
+                >
+                  <SelectItem value='spring'>봄</SelectItem>
+                  <SelectItem value='summer'>여름</SelectItem>
+                  <SelectItem value='fall'>가을</SelectItem>
+                  <SelectItem value='winter'>겨울</SelectItem>
+                </Select>
+              </FormColumn>
+              <FormColumn>
+                <Select
+                  name='travel_partner'
+                  title='함께 여행한 사람'
+                  placeholder='함께 여행한 사람'
+                  onChange={handleChangePartner}
+                  defaultValue={postData.partner}
+                >
+                  <SelectItem value='family'>가족</SelectItem>
+                  <SelectItem value='couple'>커플</SelectItem>
+                  <SelectItem value='friend'>친구</SelectItem>
+                  <SelectItem value='alone'>혼자</SelectItem>
+                  <SelectItem value='etc'>기타</SelectItem>
+                </Select>
+              </FormColumn>
             </FormRow>
             <FormRow>
               <label name='travel_location'>위치: </label>
               <LocationContainer>{locationData?.name}</LocationContainer>
               {!isEdit &&
                 (locationData.name ? (
-                  <Button onClick={handleDeleteLocation} variant='outlined'>
+                  <button 
+                    type='button' 
+                    onClick={handleDeleteLocation}
+                  >
                     삭제
-                  </Button>
+                  </button>
                 ) : (
-                  <Button onClick={() => setOpenLocationModal(true)}>위치 찾기</Button>
+                  <button 
+                    type='button' 
+                    onClick={() => setOpenLocationModal(true)}
+                  >위치 찾기</button>
                 ))}
-            </FormRow>
-            <FormRow>
-              <label htmlFor='travel_period'>여행 시기: </label>
-              <Select
-                name='travel_period'
-                title='여행 시기'
-                placeholder='여행 시기'
-                onChange={handleChangePeriod}
-                defaultValue={postData.period}
-              >
-                <SelectItem value='spring'>봄</SelectItem>
-                <SelectItem value='summer'>여름</SelectItem>
-                <SelectItem value='fall'>가을</SelectItem>
-                <SelectItem value='winter'>겨울</SelectItem>
-              </Select>
-            </FormRow>
-            <FormRow>
-              <label htmlFor='travel_partner'>여행 구성원: </label>
-              <Select
-                name='travel_partner'
-                title='함께 여행한 사람'
-                placeholder='함께 여행한 사람'
-                onChange={handleChangePartner}
-                defaultValue={postData.partner}
-              >
-                <SelectItem value='family'>가족</SelectItem>
-                <SelectItem value='couple'>커플</SelectItem>
-                <SelectItem value='friend'>친구</SelectItem>
-                <SelectItem value='alone'>혼자</SelectItem>
-                <SelectItem value='etc'>기타</SelectItem>
-              </Select>
             </FormRow>
             <FormRow>
               <TextArea
                 placeholder='나의 후기를 작성해봅시다.'
+                id='input_review'
                 value={postData.content}
                 onChange={handleChangeContent}
               />
             </FormRow>
             <FormRow>
-              <Button onClick={handleCancel} variant='outlined'>
+              <button onClick={handleCancel}>
                 취소
-              </Button>
+              </button>
               {isEdit && (
-                <Button variant='outlined' onClick={handleDeletePost} icon={<TrashSimple size={20} />}>
+                <button type='button' onClick={handleDeletePost} >
                   글 삭제
-                </Button>
+                </button>
               )}
-              <Button type='submit' icon={<FloppyDisk size={20} />}>
+              <button type='submit'>
                 {isEdit ? '글 수정' : '글 쓰기'}
-              </Button>
+              </button>
             </FormRow>
           </FormMenu>
         </FormInner>
@@ -180,11 +187,17 @@ function PostForm({ onSubmit, isEdit, postData: initialPostData }) {
           <KakaoMap onChange={setLocationData} />
         </Modal>
       )}
-    </Container>
+
+    </FormContainer>
+
   )
 }
 
 export default memo(PostForm)
+
+const FormContainer = styled.div`
+  margin: 1rem;
+`
 
 const FormMenu = styled.div`
   gap: 14px;
@@ -197,6 +210,11 @@ const FormRow = styled.div`
   justify-content: center;
   align-items: center;
   gap: 16px;
+`
+const FormColumn = styled.div`
+  display: inline-flex;
+  gap: 20px;
+  flex-direction: column;
 `
 
 const FormInner = styled.div`
