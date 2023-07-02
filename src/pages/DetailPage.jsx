@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { useRef } from 'react'
-import { deletePost, getPostByPostId } from 'fb/db'
+import { deletePost, getPostByPostId, updatePost } from 'fb/db'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 function DetailPage() {
@@ -47,12 +47,19 @@ function DetailPage() {
     <>
       <p>Detail Page</p>
       <div style={{ margin: '20px' }}>
-        <p>이미지: {post.imgeUrl}</p>
+        <p>
+          이미지:
+          <div>
+            <img alt='postedImage' src={post.imageUrl} style={{ width: '200px' }} />
+          </div>
+        </p>
         <p>언제: {post.period}</p>
         <p>어디로: {post.destination}</p>
         <p>누구와: {post.partner}</p>
         <p>후기: {post.content}</p>
         <p>isLiked: {post.isLiked.toString()}</p>
+        <button onClick={updatePost}>수정</button>
+        <button onClick={deletePost}>삭제</button>
       </div>
 
       <form
@@ -73,6 +80,7 @@ function DetailPage() {
           ref={addInputRef}
           type='text'
           placeholder='comments를 남겨주세요.'
+          autoFocus='autofocus'
           value={comment}
           onChange={(e) => {
             setComment(e.target.value)
