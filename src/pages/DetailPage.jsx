@@ -114,45 +114,6 @@ function DetailPage() {
 
   console.log(comments)
 
-  // style components
-  const StDetailPage = styled.div`
-    width: 50%;
-    justify-content: center;
-    margin: 0 auto;
-    text-align: center;
-    line-height: 30px;
-    font-family: IBM Plex Sans KR;
-
-    .inner-img {
-      width: 100%;
-    }
-
-    .inner-context {
-      margin-top: 20px;
-      text-align: left;
-    }
-
-    .inner-buttons {
-      text-align: right;
-    }
-
-    .StComments {
-      margin-top: 40px;
-      padding: 50px;
-      border: 1px solid #050505;
-    }
-
-    .inputStyle {
-      width: 70%;
-      height: 25px;
-      margin-bottom: 50px;
-      border-radius: 15px;
-      border: 1px solid #050505;
-      background: #050505;
-      color: white;
-    }
-  `
-
   return (
     <StDetailPage>
       <div>
@@ -181,7 +142,7 @@ function DetailPage() {
               setInput(e.target.value)
             }}
           />
-          <button>댓글등록</button>
+          <button type='submit'>댓글등록</button>
         </form>
         <div>
           {comments.map((comment) => {
@@ -214,3 +175,42 @@ function DetailPage() {
 }
 
 export default DetailPage
+
+// style components
+const StDetailPage = styled.div`
+  width: 50%;
+  justify-content: center;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 30px;
+  font-family: IBM Plex Sans KR;
+
+  .inner-img {
+    width: 100%;
+  }
+
+  .inner-context {
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  .inner-buttons {
+    text-align: right;
+  }
+
+  .StComments {
+    margin-top: 40px;
+    padding: 50px;
+    border: 1px solid #050505;
+  }
+
+  .inputStyle {
+    width: 70%;
+    height: 25px;
+    margin-bottom: 50px;
+    border-radius: 15px;
+    border: 1px solid #050505;
+    background: #050505;
+    color: white;
+  }
+`

@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { styled } from 'styled-components'
+import { HeartIcon } from 'assets/svgs'
 
 import { Link, useNavigate } from 'react-router-dom'
-
 
 function CardItem({ post }) {
   const dispatch = useDispatch()
@@ -44,44 +44,66 @@ function CardItem({ post }) {
   }, [post, heart])
   console.log(post)
 
-  // style components
-
-  const StPostCard = styled.div`
-    /* display: flex; */
-    position: relative;
-    float: left;
-    width: 800px;
-    height: 500px;
-    border: 1px solid black;
-    line-height: 30px;
-    object-fit: cover;
-    overflow: hidden;
-
-    /* .inner-component-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      overflow: hidden;
-    } */
-  `
-
   return (
     <div key={post.postId}>
       <StPostCard>
-        <div className='inner-component-img'>
-          <img alt='imgPosted' src={post.imageUrl} />
-        </div>
+        <img className='inner-component-img' alt='imgPosted' src={post.imageUrl} />
       </StPostCard>
       <StPostCard>
+        <Button onClick={handleHeart}>
+          <HeartIcon className={heart ? 'selectFavorite' : 'heartIcon'} />
+        </Button>
         <p>좋아요 {totalHeart}개</p>
         {post.destinaion} |{post.period}|<div>{post.content}</div>
-        <button>
-          <Link to={`/postPage/${post.postId}`}>EDIT</Link>
-        </button>
-        <button onClick={handleHeart}>{heart ? 'heart filled' : 'heart empty'}</button>
+        <div>
+          <Link to={`/postPage/${post.postId}`}>DETAIL</Link>
+        </div>
       </StPostCard>
     </div>
   )
 }
 
 export default CardItem
+
+// style components
+
+const StPostCard = styled.div`
+  position: relative;
+  float: left;
+  width: 800px;
+  height: 500px;
+  border: 1px solid black;
+  line-height: 30px;
+
+  overflow: hidden;
+
+  .inner-component-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+`
+
+const Button = styled.button`
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  height: auto;
+  background-color: transparent;
+
+  .heartIcon {
+    width: 20px;
+    height: 19px;
+    fill: gray;
+    stroke: black;
+  }
+
+  .selectFavorite {
+    width: 20px;
+    height: 19px;
+    fill: red;
+    stroke: black;
+  }
+`
