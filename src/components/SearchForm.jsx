@@ -59,8 +59,28 @@ const SearchForm = ({ filterData }) => {
   }
   console.log(posts)
 
+
+const SearchForm = () => {
+  // style components
+  const StSearchSection = {
+    width: '100%',
+    textAlign: 'center',
+    margin: '0 auto',
+    marginTop: '20px',
+    marginBottom: '20px',
+  }
+
+  const StMainSearch = {
+    width: '40%',
+    height: '25px',
+    borderRadius: '15px',
+    border: '1px solid #050505',
+    background: '#050505',
+    color: 'white',
+  }
+
   return (
-    <div>
+    <div style={{ ...StSearchSection }}>
       {/* <input type='text' autofocus='autofocus' /> */}
       <Select
         name='travel_period'

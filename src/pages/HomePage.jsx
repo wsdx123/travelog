@@ -59,9 +59,6 @@ function HomePage() {
     })
   }, [])
 
-  useEffect(() => {
-    console.log(`posts: `, posts)
-  }, [posts])
 
   return (
     <div>

@@ -16,6 +16,7 @@ const HeaderStyles = {
   paddingLeft: '20px',
   color: 'black',
   fontWeight: '600',
+  fontFamily: 'IBM Plex Sans KR',
 }
 
 const layoutStyles = {
@@ -23,14 +24,15 @@ const layoutStyles = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  minHeight: '90vh',
+  // minHeight: '90vh',
+  width: '100%',
 }
 
 const navBtn = {
   float: 'right',
+  marginRight: '40px',
   display: 'grid',
-  marginRight: '50px',
-  padding: '20px',
+  alignItems: 'center',
 }
 
 // 왜 새로고침하고 로그인 페이지로 오면 auth.currentUser 값이 남아있는지?
@@ -66,15 +68,17 @@ function Header() {
           </div>
         ) : (
           <div style={{ ...navBtn }}>
-            {/* UI 맞춰주려고 같은 버튼 타입으로 변경 */}
+            <div>
+              {/* UI 맞춰주려고 같은 버튼 타입으로 변경 */}
+              <button type='button' onClick={handleMyPage}>
+                My Page
+              </button>
+              <button type='button' onClick={handleLogOut}>
+                로그아웃
+              </button>
+            </div>
             <button type='button' onClick={handleWritePost}>
               게시글작성
-            </button>
-            <button type='button' onClick={handleMyPage}>
-              My Page
-            </button>
-            <button type='button' onClick={handleLogOut}>
-              로그아웃
             </button>
           </div>
         )}

@@ -3,7 +3,11 @@ import { auth, db } from 'firebase.js'
 import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+
+import { styled } from 'styled-components'
+
 import { Link, useNavigate } from 'react-router-dom'
+
 
 function CardItem({ post }) {
   const dispatch = useDispatch()
@@ -42,41 +46,40 @@ function CardItem({ post }) {
 
   // style components
 
-  const StPostCard = {
-    width: '100%',
-    maxWidth: '100%',
-  }
+  const StPostCard = styled.div`
+    /* display: flex; */
+    position: relative;
+    float: left;
+    width: 800px;
+    height: 500px;
+    border: 1px solid black;
+    line-height: 30px;
+    object-fit: cover;
+    overflow: hidden;
+
+    /* .inner-component-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      overflow: hidden;
+    } */
+  `
 
   return (
-    <div style={{ ...StPostCard }} key={post.postId}>
-      <div>
-        <img alt='imgPosted' src={post.imageUrl} style={{ width: '100px' }} />
-      </div>
-      <p>좋아요 {totalHeart}개</p>
-      <ul>
-        <li>{post.destinaion}</li>
-        <li>{post.period}</li>
-        <li>{post.partner}</li>
-        <li>{post.content}</li>
-      </ul>
-      <div>
+    <div key={post.postId}>
+      <StPostCard>
+        <div className='inner-component-img'>
+          <img alt='imgPosted' src={post.imageUrl} />
+        </div>
+      </StPostCard>
+      <StPostCard>
+        <p>좋아요 {totalHeart}개</p>
+        {post.destinaion} |{post.period}|<div>{post.content}</div>
         <button>
           <Link to={`/postPage/${post.postId}`}>EDIT</Link>
         </button>
-      </div>
-      <div>
-        <button
-          onClick={() => {
-            dispatch({
-              type: 'DELETE_POST',
-              payload: post.postId,
-            })
-          }}
-        >
-          DELETE
-        </button>
-      </div>
-      <button onClick={handleHeart}>{heart ? 'heart filled' : 'heart empty'}</button>
+        <button onClick={handleHeart}>{heart ? 'heart filled' : 'heart empty'}</button>
+      </StPostCard>
     </div>
   )
 }

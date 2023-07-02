@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import CardItem from './CardItem'
+import { styled } from 'styled-components'
 
 function CardList({ posts }) {
   // const posts = useSelector((state) => {
@@ -33,14 +34,11 @@ function CardList({ posts }) {
   // }, [posts])
 
   // style components
-  const StPostList = {
-    width: '100%',
-    maxWidth: '100%',
-    height: '250px',
-    display: 'flex',
-    paddingLeft: '20px',
-    borderSizing: 'border-box',
-  }
+  const StPostList = styled.div`
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+  `
 
   console.log(posts)
   console.log(posts.length)
@@ -48,11 +46,11 @@ function CardList({ posts }) {
   // if (posts === []) return <div>loading..</div>
 
   return (
-    <div style={{ ...StPostList }}>
+    <StPostList>
       {posts.map((post) => {
         return <CardItem key={`cardKey__${post.postId}`} post={post} />
       })}
-    </div>
+    </StPostList>
   )
 }
 
